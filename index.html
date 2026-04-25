@@ -501,6 +501,33 @@ button:focus-visible, .pharaoh:focus-visible {
   outline: 2px solid var(--carnelian);
   outline-offset: 2px;
 }
+
+/* ===== BARRE DE RECHERCHE MUSÉE ===== */
+.search-bar-wrap {
+  max-width: 600px; margin: 0 auto 1.5rem; padding: 0 0.5rem;
+}
+.search-input-wrap { position: relative; display: flex; align-items: center; }
+.search-icon { position: absolute; left: 0.9rem; font-size: 0.95rem; pointer-events: none; opacity: 0.5; color: var(--ink); z-index:1; }
+.search-input {
+  width: 100%; padding: 0.6rem 2.4rem 0.6rem 2.3rem;
+  border-radius: 3px; border: 1px solid var(--gold);
+  font-family: 'EB Garamond', serif; font-size: 1rem;
+  background: rgba(255,255,255,0.5); color: var(--ink); outline: none;
+  box-shadow: 0 2px 4px var(--shadow); transition: border-color 0.2s, background 0.2s;
+}
+.search-input:focus { border-color: var(--gold-deep); background: rgba(255,255,255,0.85); }
+.search-input::placeholder { color: var(--ink-soft); font-style: italic; }
+.search-clear {
+  position: absolute; right: 0.7rem;
+  background: var(--papyrus-darker); border: 1px solid var(--gold); width: 22px; height: 22px;
+  border-radius: 50%; font-size: 0.7rem; cursor: pointer;
+  display: none; align-items: center; justify-content: center; color: var(--ink);
+}
+.search-clear.visible { display: flex; }
+.search-results-count { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 0.85rem; color: var(--ink-soft); padding: 0.25rem 0.2rem 0; min-height: 1.3rem; }
+.search-highlight { background: rgba(201,169,97,0.35); border-radius: 2px; padding: 0 1px; }
+.no-search-results { text-align: center; padding: 2rem; color: var(--ink-soft); font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.05rem; display: none; }
+
 </style>
 </head>
 <body>
@@ -521,7 +548,17 @@ button:focus-visible, .pharaoh:focus-visible {
 
   <nav class="nav-period" id="navPeriod" aria-label="Navigation par période"></nav>
 
-  <div id="dynasties"></div>
+  
+<div class="search-bar-wrap">
+  <div class="search-input-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="search" class="search-input" id="searchInput" placeholder="Rechercher un pharaon..." autocomplete="off" autocorrect="off" spellcheck="false">
+    <button class="search-clear" id="searchClear" aria-label="Effacer">✕</button>
+  </div>
+  <div class="search-results-count" id="searchCount"></div>
+</div>
+<div class="no-search-results" id="noResults">Aucun résultat pour <strong id="noResultsQuery"></strong> — essayez une autre orthographe</div>
+<div id="dynasties"></div>
 
   <footer class="footer">
     <span class="ankh">☥</span>
@@ -1095,8 +1132,111 @@ document.addEventListener('keydown', e => {
 });
 
 // Init
+
+// ===== RECHERCHE APPROXIMATIVE =====
+function normalizeStr(s) {
+  return (s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z0-9 ]/g,' ').trim();
+}
+function levenshtein(a,b){
+  const m=a.length,n=b.length;
+  if(!m)return n; if(!n)return m;
+  const dp=[];
+  for(let i=0;i<=m;i++){dp[i]=[i];}
+  for(let j=0;j<=n;j++){dp[0][j]=j;}
+  for(let i=1;i<=m;i++) for(let j=1;j<=n;j++)
+    dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
+  return dp[m][n];
+}
+function matchScore(query,text){
+  const q=normalizeStr(query),t=normalizeStr(text);
+  if(!q)return 1; if(t.includes(q))return 1;
+  const words=q.split(' ').filter(w=>w.length>=2);
+  if(!words.length)return 0;
+  let total=0;
+  for(const word of words){
+    if(t.includes(word)){total+=1;continue;}
+    const tWords=t.split(' ').filter(Boolean);
+    let best=Infinity;
+    for(const tw of tWords){
+      if(Math.abs(tw.length-word.length)>3)continue;
+      best=Math.min(best,levenshtein(word,tw));
+    }
+    const tol=word.length<=4?1:word.length<=7?2:3;
+    if(best<=tol)total+=Math.max(0,1-best/word.length);
+  }
+  return total/words.length;
+}
+function highlightName(name,query){
+  if(!query.trim())return name;
+  let result=name;
+  const words=normalizeStr(query).split(' ').filter(w=>w.length>=2);
+  for(const word of words){
+    const re=new RegExp('('+word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+')','gi');
+    result=result.replace(re,'<mark class="search-highlight">$1</mark>');
+  }
+  return result;
+}
+function runSearch(query){
+  const q=query.trim();
+  const cards=document.querySelectorAll('.pharaoh');
+  const dynasties=document.querySelectorAll('.dynasty');
+  const noRes=document.getElementById('noResults');
+  const countEl=document.getElementById('searchCount');
+  document.getElementById('noResultsQuery').textContent='"'+q+'"';
+
+  if(!q){
+    cards.forEach(c=>{c.style.display='';});
+    dynasties.forEach(d=>{d.style.display='';});
+    noRes.style.display='none'; countEl.textContent='';
+    document.querySelectorAll('.pharaoh-name').forEach(el=>{el.innerHTML=el.dataset.original||el.innerHTML;});
+    return;
+  }
+
+  // Aplatir les données pour accès par index
+  const allPharaons=[];
+  DYNASTIES.forEach(dyn=>dyn.pharaohs.forEach(ph=>allPharaons.push(ph)));
+
+  let shown=0, idx=0;
+  cards.forEach(card=>{
+    const nameEl=card.querySelector('.pharaoh-name');
+    if(!nameEl) return;
+    if(!nameEl.dataset.original) nameEl.dataset.original=nameEl.textContent;
+    const name=nameEl.dataset.original;
+    const ph=allPharaons[idx++]||{};
+    const score=matchScore(q, name+' '+(ph.anecdote||'')+ ' '+(ph.reign||''));
+    if(score>=0.35){
+      card.style.display='';
+      nameEl.innerHTML=highlightName(name,q);
+      shown++;
+    } else {
+      card.style.display='none';
+    }
+  });
+
+  dynasties.forEach(block=>{
+    const vis=[...block.querySelectorAll('.pharaoh')].some(c=>c.style.display!=='none');
+    block.style.display=vis?'':'none';
+  });
+
+  if(shown===0){noRes.style.display='block';countEl.textContent='';}
+  else{noRes.style.display='none';countEl.textContent=shown+' pharaon'+(shown>1?'s':'')+' trouvé'+(shown>1?'s':'');}
+}
+function initSearch(){
+  const input=document.getElementById('searchInput');
+  const clearBtn=document.getElementById('searchClear');
+  if(!input)return;
+  let timer;
+  input.addEventListener('input',()=>{
+    clearBtn.classList.toggle('visible',input.value.length>0);
+    clearTimeout(timer);
+    timer=setTimeout(()=>runSearch(input.value),200);
+  });
+  clearBtn.addEventListener('click',()=>{input.value='';clearBtn.classList.remove('visible');runSearch('');input.focus();});
+}
+
 buildNav();
 buildDynasties();
+initSearch();
 </script>
 
 </body>
