@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Les Pharaons d'Égypte — Frise chronologique</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Cinzel:wght@400;500;600;700&family=EB+Garamond:wght@400;500;600&display=swap');
+
+:root {
+  --papyrus: #f1e3c4;
+  --papyrus-dark: #e3d2af;
+  --papyrus-darker: #d4be93;
+  --ink: #2a1f14;
+  --ink-soft: #4a3826;
+  --gold: #c9a961;
+  --gold-deep: #a48334;
+  --lapis: #1f4068;
+  --carnelian: #a83e2c;
+  --shadow: rgba(74, 56, 38, 0.25);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  background: var(--papyrus);
+  color: var(--ink);
+  font-family: 'EB Garamond', serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Texture papyrus */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 30%, rgba(168, 131, 52, 0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(168, 131, 52, 0.06) 0%, transparent 50%),
+    repeating-linear-gradient(
+      90deg,
+      transparent 0,
+      transparent 2px,
+      rgba(74, 56, 38, 0.015) 2px,
+      rgba(74, 56, 38, 0.015) 4px
+    ),
+    repeating-linear-gradient(
+      0deg,
+      transparent 0,
+      transparent 3px,
+      rgba(74, 56, 38, 0.02) 3px,
+      rgba(74, 56, 38, 0.02) 6px
+    );
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Effet grain */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/%3E%3C/svg%3E");
+  opacity: 0.15;
+  pointer-events: none;
+  z-index: 1;
+  mix-blend-mode: multiply;
+}
+
+main {
+  position: relative;
+  z-index: 2;
+  padding: 2rem 1rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* En-tête */
+.header {
+  text-align: center;
+  padding: 2rem 1rem 3rem;
+  border-bottom: 1px solid var(--gold);
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.header::before, .header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  width: 60px;
+  height: 3px;
+  background: var(--gold);
+}
+.header::before { left: 50%; transform: translateX(-100px); }
+.header::after { left: 50%; transform: translateX(40px); }
+
+.hieroglyphs-deco {
+  font-family: serif;
+  font-size: 1.8rem;
+  color: var(--gold-deep);
+  letter-spacing: 0.5rem;
+  margin-bottom: 1rem;
+  opacity: 0.85;
+}
+
+h1 {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.8rem, 5vw, 3.2rem);
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.3);
+}
+
+.subtitle {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: clamp(0.95rem, 2.2vw, 1.2rem);
+  color: var(--ink-soft);
+  letter-spacing: 0.05em;
+}
+
+/* Légende */
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem 1.5rem;
+  margin: 1.5rem auto;
+  padding: 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  color: var(--ink-soft);
+}
+
+.legend-swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid var(--ink-soft);
+}
+
+/* Navigation rapide */
+.nav-period {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1rem auto 2.5rem;
+  padding: 0 1rem;
+}
+
+.nav-period button {
+  background: transparent;
+  border: 1px solid var(--gold-deep);
+  color: var(--ink);
+  padding: 0.4rem 0.9rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+.nav-period button:hover, .nav-period button:focus {
+  background: var(--gold);
+  color: var(--ink);
+}
+
+/* Une dynastie = un bloc */
+.dynasty {
+  margin-bottom: 3.5rem;
+  scroll-margin-top: 1rem;
+}
+
+.dynasty-header {
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 1rem 1.2rem;
+  border-left: 5px solid var(--dynasty-color, var(--gold));
+  background: linear-gradient(to right, rgba(255,255,255,0.4), transparent);
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.dynasty-period {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  display: block;
+  width: 100%;
+  margin-bottom: 0.4rem;
+}
+
+.dynasty-name {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.3rem, 3.5vw, 1.8rem);
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.dynasty-dates {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 1rem;
+  color: var(--ink-soft);
+}
+
+.dynasty-description {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  color: var(--ink-soft);
+  margin-top: 0.5rem;
+  width: 100%;
+  max-width: 700px;
+  line-height: 1.5;
+}
+
+/* Frise des pharaons */
+.pharaohs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 1rem;
+  padding: 0 0.5rem;
+}
+
+.pharaoh {
+  background: linear-gradient(135deg, #faf0d8 0%, #f1e3c4 100%);
+  border: 1px solid var(--papyrus-darker);
+  padding: 1rem 1.1rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    inset 0 0 30px rgba(255,255,255,0.3);
+}
+
+.pharaoh:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 6px 16px var(--shadow),
+    inset 0 0 30px rgba(255,255,255,0.4);
+  border-color: var(--gold);
+}
+
+.pharaoh.star {
+  background: linear-gradient(135deg, #fff5dc 0%, #f5e2a8 100%);
+  border: 1px solid var(--gold);
+  box-shadow:
+    0 2px 8px rgba(168, 131, 52, 0.15),
+    inset 0 0 30px rgba(255,255,255,0.5);
+}
+
+.pharaoh.star::before {
+  content: '✦';
+  position: absolute;
+  top: 0.5rem;
+  right: 0.7rem;
+  font-size: 1rem;
+  color: var(--gold-deep);
+}
+
+.pharaoh-name {
+  font-family: 'Cinzel', serif;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4rem;
+  padding-right: 1rem;
+  line-height: 1.3;
+}
+
+.pharaoh-meta {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.85rem;
+  color: var(--ink-soft);
+  line-height: 1.5;
+}
+
+.pharaoh-meta div {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.pharaoh-meta .label {
+  color: var(--gold-deep);
+  font-style: italic;
+  min-width: 60px;
+}
+
+.pharaoh-cta {
+  margin-top: 0.6rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  opacity: 0.7;
+}
+
+/* Modal anecdote */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(42, 31, 20, 0.75);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.active {
+  display: flex;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal {
+  background: linear-gradient(135deg, #faf0d8 0%, #f1e3c4 100%);
+  border: 2px solid var(--gold);
+  padding: 2rem 1.8rem;
+  max-width: 540px;
+  width: 100%;
+  max-height: 85vh;
+  overflow-y: auto;
+  border-radius: 4px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  animation: slideUp 0.4s cubic-bezier(0.2, 0.9, 0.3, 1.2);
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px) scale(0.97); opacity: 0; }
+  to { transform: translateY(0) scale(1); opacity: 1; }
+}
+
+.modal::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  bottom: 8px;
+  border: 1px solid var(--gold-deep);
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.8rem;
+  right: 0.8rem;
+  background: transparent;
+  border: 1px solid var(--ink-soft);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: var(--ink);
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+.modal-close:hover {
+  background: var(--ink);
+  color: var(--papyrus);
+}
+
+.modal-hieroglyphs {
+  font-size: 1.4rem;
+  color: var(--gold-deep);
+  text-align: center;
+  letter-spacing: 0.4rem;
+  margin-bottom: 0.8rem;
+  opacity: 0.7;
+}
+
+.modal-name {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.4rem, 4vw, 1.8rem);
+  font-weight: 600;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 0.3rem;
+  letter-spacing: 0.04em;
+}
+
+.modal-dynasty {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.95rem;
+  color: var(--ink-soft);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--papyrus-darker);
+}
+
+.modal-info {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  font-family: 'EB Garamond', serif;
+  font-size: 1rem;
+}
+
+.modal-info dt {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gold-deep);
+  align-self: center;
+}
+
+.modal-info dd {
+  color: var(--ink);
+  font-size: 1.05rem;
+}
+
+.modal-anecdote-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--carnelian);
+  text-align: center;
+  margin-bottom: 0.7rem;
+  padding-top: 0.5rem;
+  border-top: 1px dashed var(--gold);
+  padding-top: 1rem;
+}
+
+.modal-anecdote {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: var(--ink);
+  text-align: justify;
+  hyphens: auto;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  margin-top: 4rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--gold);
+  color: var(--ink-soft);
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 0.9rem;
+}
+
+.footer .ankh {
+  font-size: 1.5rem;
+  color: var(--gold-deep);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  main { padding: 1rem 0.5rem 3rem; }
+  .pharaohs-grid { grid-template-columns: 1fr; }
+  .modal { padding: 1.5rem 1.2rem; }
+  .header { padding: 1rem 0.5rem 2rem; }
+}
+
+/* Accessibilité focus */
+button:focus-visible, .pharaoh:focus-visible {
+  outline: 2px solid var(--carnelian);
+  outline-offset: 2px;
+}
+</style>
+</head>
+<body>
+
+<main>
+  <header class="header">
+    <div class="hieroglyphs-deco">𓂀 𓋹 𓊽 𓌃 𓏏</div>
+    <h1>Les Pharaons d'Égypte</h1>
+    <p class="subtitle">Trois mille ans d'histoire — de Narmer à Cléopâtre</p>
+  </header>
+
+  <div class="legend">
+    <div class="legend-item">
+      <span style="font-size: 0.95rem; color: var(--gold-deep);">✦</span>
+      <span>Pharaon célèbre — clique pour découvrir l'anecdote</span>
+    </div>
+  </div>
+
+  <nav class="nav-period" id="navPeriod" aria-label="Navigation par période"></nav>
+
+  <div id="dynasties"></div>
+
+  <footer class="footer">
+    <span class="ankh">☥</span>
+    Frise chronologique • Dates approximatives selon la chronologie standard<br>
+    Disponible hors connexion — enregistre cette page sur ton appareil
+  </footer>
+</main>
+
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalName">
+  <div class="modal">
+    <button class="modal-close" id="modalClose" aria-label="Fermer">✕</button>
+    <div class="modal-hieroglyphs">𓁹 𓋹 𓊽</div>
+    <h2 class="modal-name" id="modalName"></h2>
+    <p class="modal-dynasty" id="modalDynasty"></p>
+    <dl class="modal-info">
+      <dt>Règne</dt> <dd id="modalReign"></dd>
+      <dt>Durée</dt> <dd id="modalDuration"></dd>
+      <dt>Âge</dt> <dd id="modalAge"></dd>
+    </dl>
+    <div class="modal-anecdote-label">✦ Le savais-tu ? ✦</div>
+    <p class="modal-anecdote" id="modalAnecdote"></p>
+  </div>
+</div>
+
+<script>
+// Données des pharaons d'Égypte
+// Sources : chronologie standard (von Beckerath, Shaw)
+// Les dates sont approximatives, les âges au décès souvent estimés
+// Le champ "star" met en avant les pharaons les plus célèbres
+
+const DYNASTIES = [
+  // ============ PÉRIODE THINITE ============
+  {
+    period: "Période Thinite",
+    periodColor: "#c9a961",
+    number: 1,
+    name: "Ire dynastie",
+    startYear: -3150,
+    endYear: -2890,
+    description: "Unification de la Haute et Basse-Égypte. Naissance de l'écriture hiéroglyphique.",
+    pharaohs: [
+      { name: "Narmer", reign: "vers -3150", duration: "~30 ans", age: "?", anecdote: "Considéré comme le premier pharaon ! Sa célèbre palette en pierre montre l'unification de l'Égypte. Il porte la couronne blanche du Sud et la couronne rouge du Nord.", star: true },
+      { name: "Aha", reign: "vers -3100", duration: "~30 ans", age: "?", anecdote: "Son nom signifie « le combattant ». Il aurait été dévoré par un hippopotame d'après une légende !" },
+      { name: "Djer", reign: "vers -3050", duration: "~40 ans", age: "?", anecdote: "Son tombeau à Abydos fut plus tard considéré comme celui d'Osiris, le dieu des morts." },
+      { name: "Djet", reign: "vers -3000", duration: "~10 ans", age: "?", anecdote: "Son nom-serekh montre un magnifique cobra (« djet » signifie serpent)." },
+      { name: "Den", reign: "vers -2990", duration: "~40 ans", age: "?", anecdote: "Premier pharaon représenté avec la double couronne ! Il a aussi inventé la fête-Sed pour rajeunir le roi." },
+      { name: "Mérneith (reine régente)", reign: "vers -2950", duration: "?", age: "?", anecdote: "Une femme qui a gouverné l'Égypte ! Probablement la mère de Den, qui régnait pour son fils encore enfant." },
+      { name: "Adjib", reign: "vers -2925", duration: "~10 ans", age: "?", anecdote: "Son nom signifie « celui au cœur fort »." },
+      { name: "Sémerkhet", reign: "vers -2915", duration: "~9 ans", age: "?", anecdote: "Aurait subi des catastrophes pendant son règne d'après les anciens." },
+      { name: "Qâ", reign: "vers -2905", duration: "~25 ans", age: "?", anecdote: "Dernier roi de la dynastie. Son tombeau contenait 26 stèles funéraires." }
+    ]
+  },
+  {
+    period: "Période Thinite",
+    periodColor: "#c9a961",
+    number: 2,
+    name: "IIe dynastie",
+    startYear: -2890,
+    endYear: -2686,
+    description: "Période de troubles et de conflits religieux entre les partisans d'Horus et de Seth.",
+    pharaohs: [
+      { name: "Hotepsekhemoui", reign: "-2890 à -2865", duration: "~25 ans", age: "?", anecdote: "Son nom signifie « les deux puissances sont en paix », pour réconcilier le pays." },
+      { name: "Nebrê (Râneb)", reign: "-2865 à -2825", duration: "~40 ans", age: "?", anecdote: "Premier pharaon à inclure le nom du dieu soleil Rê dans son nom royal." },
+      { name: "Nynetjer", reign: "-2825 à -2780", duration: "~45 ans", age: "?", anecdote: "Très long règne. Il aurait célébré plusieurs fêtes-Sed." },
+      { name: "Ouneg", reign: "-2780 à -2770", duration: "~10 ans", age: "?", anecdote: "Roi mystérieux dont l'identité fait débat chez les égyptologues." },
+      { name: "Sénedj", reign: "-2770 à -2760", duration: "~10 ans", age: "?", anecdote: "Son nom signifie « le redoutable »." },
+      { name: "Péribsen", reign: "-2760 à -2730", duration: "~30 ans", age: "?", anecdote: "Il a fait quelque chose de jamais vu : il a remplacé le faucon Horus par l'animal de Seth sur son nom !" },
+      { name: "Khâsekhemoui", reign: "-2710 à -2686", duration: "~24 ans", age: "?", anecdote: "Il a réconcilié Horus et Seth, et placé les DEUX animaux sur son nom royal. Son tombeau contient le plus ancien objet en or jamais trouvé en Égypte." }
+    ]
+  },
+
+  // ============ ANCIEN EMPIRE ============
+  {
+    period: "Ancien Empire",
+    periodColor: "#d4a373",
+    number: 3,
+    name: "IIIe dynastie",
+    startYear: -2686,
+    endYear: -2613,
+    description: "L'âge des premières pyramides ! Naissance de l'architecture monumentale en pierre.",
+    pharaohs: [
+      { name: "Djéser", reign: "-2670 à -2650", duration: "~20 ans", age: "?", anecdote: "Avec son génial architecte Imhotep, il a fait construire la PREMIÈRE pyramide du monde : la pyramide à degrés de Saqqarah ! Elle ressemble à un escalier géant pour rejoindre les dieux.", star: true },
+      { name: "Sékhemkhet", reign: "-2649 à -2643", duration: "~6 ans", age: "?", anecdote: "Sa pyramide, jamais terminée, est appelée « la pyramide enfouie »." },
+      { name: "Khaba", reign: "-2643 à -2637", duration: "~6 ans", age: "?", anecdote: "Construit la mystérieuse « pyramide en couches » de Zaouiet el-Aryan." },
+      { name: "Houni", reign: "-2637 à -2613", duration: "~24 ans", age: "?", anecdote: "Dernier roi de la dynastie. Possiblement le bâtisseur de la pyramide de Meïdoum." }
+    ]
+  },
+  {
+    period: "Ancien Empire",
+    periodColor: "#d4a373",
+    number: 4,
+    name: "IVe dynastie",
+    startYear: -2613,
+    endYear: -2498,
+    description: "L'âge d'or des grandes pyramides de Gizeh !",
+    pharaohs: [
+      { name: "Snéfrou", reign: "-2613 à -2589", duration: "~24 ans", age: "?", anecdote: "Le roi-bâtisseur ! Il a fait construire 3 pyramides : celle de Meïdoum, la pyramide rhomboïdale (avec deux pentes !) et la pyramide rouge. Il a déplacé plus de pierre que n'importe quel autre pharaon.", star: true },
+      { name: "Khéops (Khoufou)", reign: "-2589 à -2566", duration: "~23 ans", age: "?", anecdote: "Le bâtisseur de la GRANDE PYRAMIDE de Gizeh ! Haute de 146 mètres, elle a été la plus haute construction du monde pendant 3800 ans. Composée de 2,3 millions de blocs de pierre !", star: true },
+      { name: "Djédefrê", reign: "-2566 à -2558", duration: "~8 ans", age: "?", anecdote: "Premier roi à se proclamer « Fils de Rê ». Sa pyramide à Abou Roach est en ruine aujourd'hui." },
+      { name: "Khéphren (Khâefrê)", reign: "-2558 à -2532", duration: "~26 ans", age: "?", anecdote: "Fils de Khéops. Il a fait construire la 2e grande pyramide de Gizeh ET le célèbre Sphinx, qui aurait son visage !", star: true },
+      { name: "Bichéris", reign: "-2532 à -2528", duration: "~4 ans", age: "?", anecdote: "Règne court et mal connu." },
+      { name: "Mykérinos (Menkaourê)", reign: "-2532 à -2503", duration: "~29 ans", age: "?", anecdote: "Le constructeur de la 3e pyramide de Gizeh, plus petite mais magnifique avec son revêtement en granit rouge.", star: true },
+      { name: "Chepseskaf", reign: "-2503 à -2498", duration: "~5 ans", age: "?", anecdote: "Bizarrerie : il s'est fait construire un énorme tombeau en forme de SARCOPHAGE plutôt qu'une pyramide !" }
+    ]
+  },
+  {
+    period: "Ancien Empire",
+    periodColor: "#d4a373",
+    number: 5,
+    name: "Ve dynastie",
+    startYear: -2498,
+    endYear: -2345,
+    description: "Importance grandissante du dieu soleil Rê. Apparition des Textes des Pyramides.",
+    pharaohs: [
+      { name: "Ouserkaf", reign: "-2498 à -2491", duration: "~7 ans", age: "?", anecdote: "Premier pharaon à construire un « temple solaire » en plus de sa pyramide." },
+      { name: "Sahourê", reign: "-2491 à -2477", duration: "~14 ans", age: "?", anecdote: "Il a envoyé des expéditions au mystérieux pays de Pount (peut-être l'actuelle Somalie) pour rapporter de l'encens !" },
+      { name: "Néferirkarê", reign: "-2477 à -2467", duration: "~10 ans", age: "?", anecdote: "Premier roi à utiliser officiellement les cinq noms royaux du protocole pharaonique." },
+      { name: "Chepseskarê", reign: "-2467 à -2460", duration: "~7 ans", age: "?", anecdote: "Roi obscur dont on sait très peu de choses." },
+      { name: "Néferefrê", reign: "-2460 à -2458", duration: "~2 ans", age: "?", anecdote: "Mort très jeune. Sa pyramide est restée inachevée." },
+      { name: "Niouserrê", reign: "-2458 à -2422", duration: "~36 ans", age: "?", anecdote: "Son temple solaire est le mieux conservé de tous." },
+      { name: "Menkaouhor", reign: "-2422 à -2414", duration: "~8 ans", age: "?", anecdote: "Dernier à construire un temple solaire." },
+      { name: "Djedkarê Isési", reign: "-2414 à -2375", duration: "~39 ans", age: "?", anecdote: "Long règne qui a vu de nombreuses réformes administratives." },
+      { name: "Ounas", reign: "-2375 à -2345", duration: "~30 ans", age: "?", anecdote: "Son tombeau contient les premiers TEXTES DES PYRAMIDES : des incantations magiques gravées sur les murs pour aider le roi à voyager dans l'au-delà !", star: true }
+    ]
+  },
+  {
+    period: "Ancien Empire",
+    periodColor: "#d4a373",
+    number: 6,
+    name: "VIe dynastie",
+    startYear: -2345,
+    endYear: -2181,
+    description: "Le déclin de l'Ancien Empire commence...",
+    pharaohs: [
+      { name: "Téti", reign: "-2345 à -2323", duration: "~22 ans", age: "?", anecdote: "Aurait été assassiné par sa garde personnelle d'après le prêtre Manéthon !" },
+      { name: "Pépi Ier", reign: "-2321 à -2287", duration: "~34 ans", age: "?", anecdote: "Une statue de lui en cuivre est l'une des plus anciennes grandes statues métalliques au monde." },
+      { name: "Mérenrê Ier", reign: "-2287 à -2278", duration: "~9 ans", age: "?", anecdote: "Sa momie est l'une des plus anciennes momies royales connues." },
+      { name: "Pépi II", reign: "-2278 à -2184", duration: "~94 ans", age: "~100 ans", anecdote: "PROBABLEMENT LE PLUS LONG RÈGNE DE L'HISTOIRE ! Il est devenu pharaon à 6 ans et aurait régné près d'un siècle. À 8 ans, il a écrit une lettre attendrissante demandant qu'on lui ramène un pygmée dansant !", star: true },
+      { name: "Mérenrê II", reign: "-2184 à -2183", duration: "~1 an", age: "?", anecdote: "Règne très court juste avant l'effondrement." },
+      { name: "Nitocris (?)", reign: "-2183 à -2181", duration: "~2 ans", age: "?", anecdote: "Selon Hérodote, cette reine aurait fait noyer les assassins de son frère en les invitant dans une salle souterraine qu'elle a inondée du Nil ! Légende ou réalité ?" }
+    ]
+  },
+
+  // ============ PREMIÈRE PÉRIODE INTERMÉDIAIRE ============
+  {
+    period: "1ère Période Intermédiaire",
+    periodColor: "#a08869",
+    number: 7,
+    name: "VIIe-VIIIe dynasties",
+    startYear: -2181,
+    endYear: -2160,
+    description: "Effondrement de l'Ancien Empire. Période chaotique avec de très nombreux rois éphémères.",
+    pharaohs: [
+      { name: "Rois éphémères", reign: "-2181 à -2160", duration: "très court", age: "?", anecdote: "Selon Manéthon, il y aurait eu « 70 rois en 70 jours » ! Le pays s'effondre, la famine s'installe, les pyramides ne sont plus construites." }
+    ]
+  },
+  {
+    period: "1ère Période Intermédiaire",
+    periodColor: "#a08869",
+    number: 9,
+    name: "IXe-Xe dynasties",
+    startYear: -2160,
+    endYear: -2040,
+    description: "Dynasties d'Hérakléopolis qui contrôlent le Nord, en conflit avec Thèbes au Sud.",
+    pharaohs: [
+      { name: "Khéty Ier", reign: "vers -2160", duration: "?", age: "?", anecdote: "Fondateur de la dynastie. Manéthon le décrit comme cruel." },
+      { name: "Mérikarê", reign: "vers -2075", duration: "?", age: "?", anecdote: "Son père lui a écrit le célèbre « Enseignement pour Mérikarê », un texte de sagesse pour bien gouverner." }
+    ]
+  },
+  {
+    period: "1ère Période Intermédiaire",
+    periodColor: "#a08869",
+    number: 11,
+    name: "XIe dynastie (Thèbes)",
+    startYear: -2160,
+    endYear: -2040,
+    description: "Dynastie thébaine qui finira par réunifier le pays.",
+    pharaohs: [
+      { name: "Antef Ier", reign: "-2120 à -2108", duration: "~12 ans", age: "?", anecdote: "Premier roi thébain à porter les attributs royaux." },
+      { name: "Antef II", reign: "-2108 à -2059", duration: "~49 ans", age: "?", anecdote: "Il a étendu le territoire thébain vers le Nord." },
+      { name: "Antef III", reign: "-2059 à -2051", duration: "~8 ans", age: "?", anecdote: "Père de Montouhotep II, le futur réunificateur." }
+    ]
+  },
+
+  // ============ MOYEN EMPIRE ============
+  {
+    period: "Moyen Empire",
+    periodColor: "#b08968",
+    number: 11,
+    name: "XIe dynastie (Empire réunifié)",
+    startYear: -2040,
+    endYear: -1991,
+    description: "Réunification de l'Égypte et début du Moyen Empire !",
+    pharaohs: [
+      { name: "Montouhotep II", reign: "-2046 à -1995", duration: "~51 ans", age: "?", anecdote: "LE GRAND RÉUNIFICATEUR ! Il a vaincu Hérakléopolis et reconstitué l'Égypte unie. Il a fait construire un temple révolutionnaire à Deir el-Bahari avec des terrasses superposées.", star: true },
+      { name: "Montouhotep III", reign: "-1995 à -1983", duration: "~12 ans", age: "?", anecdote: "Il a relancé les expéditions vers le pays de Pount." },
+      { name: "Montouhotep IV", reign: "-1983 à -1976", duration: "~7 ans", age: "?", anecdote: "Son vizir Amenemhat l'a peut-être détrôné pour fonder la dynastie suivante !" }
+    ]
+  },
+  {
+    period: "Moyen Empire",
+    periodColor: "#b08968",
+    number: 12,
+    name: "XIIe dynastie",
+    startYear: -1991,
+    endYear: -1782,
+    description: "L'âge classique de l'Égypte. Apogée de la littérature et de l'art.",
+    pharaohs: [
+      { name: "Amenemhat Ier", reign: "-1991 à -1962", duration: "~29 ans", age: "?", anecdote: "Il a déplacé la capitale à Licht. Assassiné dans son palais ! Son fils a écrit un texte célèbre où le roi mort donne des conseils depuis l'au-delà." },
+      { name: "Sésostris Ier", reign: "-1962 à -1928", duration: "~34 ans", age: "?", anecdote: "Grand bâtisseur. Le « Conte de Sinouhé », un des plus beaux textes de la littérature égyptienne, raconte les aventures d'un courtisan en exil sous son règne." },
+      { name: "Amenemhat II", reign: "-1928 à -1895", duration: "~33 ans", age: "?", anecdote: "Pharaon pacifique qui a développé le commerce avec la Crète et le Levant." },
+      { name: "Sésostris II", reign: "-1895 à -1878", duration: "~17 ans", age: "?", anecdote: "Il a entrepris de grands travaux dans le Fayoum pour gagner des terres agricoles." },
+      { name: "Sésostris III", reign: "-1878 à -1839", duration: "~39 ans", age: "?", anecdote: "Roi-guerrier ! Il a mené 4 campagnes en Nubie et est devenu un dieu de son vivant. Ses statues le montrent avec un visage SÉVÈRE et fatigué — révolutionnaire pour l'époque !", star: true },
+      { name: "Amenemhat III", reign: "-1839 à -1792", duration: "~47 ans", age: "?", anecdote: "Il a fait construire le « Labyrinthe » du Fayoum, que les Grecs trouvaient encore plus impressionnant que les pyramides !" },
+      { name: "Amenemhat IV", reign: "-1792 à -1782", duration: "~10 ans", age: "?", anecdote: "Règne paisible mais court." },
+      { name: "Néferousobek", reign: "-1782 à -1778", duration: "~4 ans", age: "?", anecdote: "PREMIÈRE FEMME PHARAON officiellement reconnue ! Sœur d'Amenemhat IV, elle se faisait représenter avec des vêtements masculins ET féminins.", star: true }
+    ]
+  },
+  {
+    period: "Moyen Empire",
+    periodColor: "#b08968",
+    number: 13,
+    name: "XIIIe dynastie",
+    startYear: -1782,
+    endYear: -1650,
+    description: "Très nombreux rois aux règnes courts. Le pouvoir s'affaiblit.",
+    pharaohs: [
+      { name: "Sobekhotep III", reign: "vers -1755", duration: "~4 ans", age: "?", anecdote: "Originaire d'une famille de soldats, pas de la famille royale !" },
+      { name: "Néferhotep Ier", reign: "vers -1740", duration: "~11 ans", age: "?", anecdote: "L'un des plus puissants rois de cette dynastie agitée." },
+      { name: "Sobekhotep IV", reign: "vers -1730", duration: "~11 ans", age: "?", anecdote: "Frère de Néferhotep Ier. Sa colossale statue est exposée au Louvre." }
+    ]
+  },
+
+  // ============ DEUXIÈME PÉRIODE INTERMÉDIAIRE ============
+  {
+    period: "2e Période Intermédiaire",
+    periodColor: "#8d6e63",
+    number: 15,
+    name: "XVe dynastie (Hyksôs)",
+    startYear: -1650,
+    endYear: -1550,
+    description: "Les Hyksôs, peuples venus d'Asie, dominent le Nord de l'Égypte. Ils introduisent le cheval et le char !",
+    pharaohs: [
+      { name: "Salitis", reign: "vers -1650", duration: "?", age: "?", anecdote: "Premier roi hyksôs. Il a établi sa capitale à Avaris dans le Delta." },
+      { name: "Khyan", reign: "vers -1610", duration: "?", age: "?", anecdote: "Son nom a été retrouvé jusqu'en Crète et en Mésopotamie ! Très grand commerçant." },
+      { name: "Apopi", reign: "-1580 à -1540", duration: "~40 ans", age: "?", anecdote: "ROI HYKSÔS LE PLUS CÉLÈBRE. La légende raconte qu'il a envoyé un message moqueur au pharaon thébain disant que les hippopotames de Thèbes le réveillaient la nuit (à 800 km !) — déclenchant la guerre de libération.", star: true }
+    ]
+  },
+  {
+    period: "2e Période Intermédiaire",
+    periodColor: "#8d6e63",
+    number: 17,
+    name: "XVIIe dynastie (Thèbes)",
+    startYear: -1650,
+    endYear: -1550,
+    description: "Dynastie thébaine qui résiste aux Hyksôs et lance la guerre de libération.",
+    pharaohs: [
+      { name: "Séqénenrê Taâ", reign: "vers -1560", duration: "~3 ans", age: "~40 ans", anecdote: "TUÉ AU COMBAT contre les Hyksôs ! Sa momie montre des blessures terribles à la tête causées par des haches de combat. Un pharaon-héros mort en guerrier !", star: true },
+      { name: "Kamosé", reign: "-1555 à -1550", duration: "~5 ans", age: "?", anecdote: "Fils du précédent. Il a continué la guerre contre les Hyksôs, mais est mort avant la victoire finale." }
+    ]
+  },
+
+  // ============ NOUVEL EMPIRE ============
+  {
+    period: "Nouvel Empire",
+    periodColor: "#bc6c25",
+    number: 18,
+    name: "XVIIIe dynastie",
+    startYear: -1550,
+    endYear: -1295,
+    description: "L'ÂGE D'OR de l'Égypte ! La dynastie la plus célèbre, avec Toutânkhamon, Hatchepsout, Akhénaton...",
+    pharaohs: [
+      { name: "Ahmôsis Ier", reign: "-1550 à -1525", duration: "~25 ans", age: "~35 ans", anecdote: "LE LIBÉRATEUR ! Il a chassé les Hyksôs d'Égypte et fondé le Nouvel Empire. Il a aussi épousé sa sœur Ahmès-Néfertari, qui sera vénérée comme déesse !", star: true },
+      { name: "Amenhotep Ier", reign: "-1525 à -1504", duration: "~21 ans", age: "?", anecdote: "Avec sa mère Ahmès-Néfertari, il a fondé Deir el-Médineh, le village des artisans qui creusaient les tombes royales. Vénéré comme dieu pendant 1500 ans !" },
+      { name: "Thoutmosis Ier", reign: "-1504 à -1492", duration: "~12 ans", age: "?", anecdote: "Premier pharaon enterré dans la VALLÉE DES ROIS ! Il a étendu l'empire jusqu'à l'Euphrate." },
+      { name: "Thoutmosis II", reign: "-1492 à -1479", duration: "~13 ans", age: "~30 ans", anecdote: "Mari et demi-frère d'Hatchepsout. De santé fragile, il est mort jeune." },
+      { name: "Hatchepsout", reign: "-1479 à -1458", duration: "~21 ans", age: "~50 ans", anecdote: "LA FEMME PHARAON ! D'abord régente pour son neveu Thoutmosis III, elle s'est ensuite proclamée pharaon à part entière. Elle se faisait représenter avec une fausse barbe ! Son temple à Deir el-Bahari est l'un des plus beaux d'Égypte. Grande exploratrice, elle a envoyé une expédition au pays de Pount.", star: true },
+      { name: "Thoutmosis III", reign: "-1479 à -1425", duration: "~54 ans", age: "~56 ans", anecdote: "LE NAPOLÉON ÉGYPTIEN ! Le plus grand chef militaire de l'Égypte antique. Il a mené 17 campagnes, gagné la bataille de Megiddo (la plus ancienne bataille bien documentée), et étendu l'empire à son maximum.", star: true },
+      { name: "Amenhotep II", reign: "-1425 à -1400", duration: "~25 ans", age: "~45 ans", anecdote: "Athlète exceptionnel ! Il était fier de pouvoir tirer des flèches qui transperçaient des cibles en cuivre, et de ramer plus longtemps que tous ses soldats." },
+      { name: "Thoutmosis IV", reign: "-1400 à -1390", duration: "~10 ans", age: "?", anecdote: "Une légende raconte que jeune prince, il s'est endormi entre les pattes du Sphinx ensablé, qui lui a promis le trône s'il le déneigeait. La « Stèle du Songe » entre les pattes du Sphinx raconte cette histoire !", star: true },
+      { name: "Amenhotep III", reign: "-1390 à -1352", duration: "~38 ans", age: "~50 ans", anecdote: "PHARAON DU LUXE ! Règne extraordinairement riche et prospère. Il a fait construire d'immenses monuments dont les colosses de Memnon. Il a épousé la roturière Tiyi qu'il adorait. L'Égypte est alors la superpuissance du monde !", star: true },
+      { name: "Akhénaton (Amenhotep IV)", reign: "-1352 à -1336", duration: "~16 ans", age: "~35 ans", anecdote: "LE PHARAON RÉVOLUTIONNAIRE ! Il a fait quelque chose de fou : il a aboli tous les dieux pour imposer un seul dieu, le disque solaire ATON ! Il a déplacé la capitale dans une ville nouvelle, Amarna. Avec sa sublime épouse Néfertiti. L'art change radicalement : les corps sont étirés, étranges...", star: true },
+      { name: "Smenkhkarê", reign: "-1338 à -1336", duration: "~2 ans", age: "?", anecdote: "Pharaon mystérieux ! Certains pensent que c'était en fait Néfertiti déguisée en homme !" },
+      { name: "Toutânkhamon", reign: "-1336 à -1327", duration: "~9 ans", age: "~19 ans", anecdote: "LE PLUS CÉLÈBRE PHARAON DU MONDE ! Devenu roi à 9 ans, mort à 19 ans seulement. Pas un grand roi en vrai... mais sa tombe découverte INTACTE en 1922 par Howard Carter contenait des trésors fabuleux dont son célèbre masque d'or de 11 kg ! Maladif, il marchait avec une canne.", star: true },
+      { name: "Aÿ", reign: "-1327 à -1323", duration: "~4 ans", age: "?", anecdote: "Vieux conseiller, peut-être grand-père de Néfertiti. Il a épousé la veuve de Toutânkhamon pour devenir roi !" },
+      { name: "Horemheb", reign: "-1323 à -1295", duration: "~28 ans", age: "?", anecdote: "Général qui a effacé toute trace d'Akhénaton, Toutânkhamon et Aÿ ! Il martelait leurs noms partout. Pour les Égyptiens officiels, lui-même succédait directement à Amenhotep III." }
+    ]
+  },
+  {
+    period: "Nouvel Empire",
+    periodColor: "#bc6c25",
+    number: 19,
+    name: "XIXe dynastie",
+    startYear: -1295,
+    endYear: -1186,
+    description: "L'âge des Ramsès ! Apogée militaire et architectural.",
+    pharaohs: [
+      { name: "Ramsès Ier", reign: "-1295 à -1294", duration: "~16 mois", age: "~70 ans", anecdote: "Vieux général choisi par Horemheb. Sa momie a été VOLÉE puis revendue, et a fait un voyage incroyable jusqu'aux États-Unis avant de revenir en Égypte en 2003 !" },
+      { name: "Séthi Ier", reign: "-1294 à -1279", duration: "~15 ans", age: "?", anecdote: "GRAND ROI souvent oublié à cause de son fils. Il a fait construire le magnifique temple d'Abydos avec ses bas-reliefs parmi les plus beaux d'Égypte. Sa tombe (KV17) est la plus longue et la plus belle de la Vallée des Rois !", star: true },
+      { name: "Ramsès II « le Grand »", reign: "-1279 à -1213", duration: "~66 ans", age: "~92 ans", anecdote: "LE PHARAON LE PLUS CÉLÈBRE APRÈS TOUTÂNKHAMON ! Règne de 66 ans, plus de 100 enfants ! Il a combattu les Hittites à la bataille de Qadesh (1274 av. J.-C.) — il a failli mourir mais en a fait un récit héroïque sur tous ses temples ! Constructeur d'Abou Simbel, du Ramesséum, du temple de Louxor... Il a vécu si longtemps que ses sujets pensaient qu'il était immortel !", star: true },
+      { name: "Mérenptah", reign: "-1213 à -1203", duration: "~10 ans", age: "~70 ans", anecdote: "13e fils de Ramsès II ! Il a attendu si longtemps que la plupart de ses frères étaient morts avant lui. Sa stèle mentionne ISRAËL pour la première fois dans l'histoire !" },
+      { name: "Séthi II", reign: "-1203 à -1197", duration: "~6 ans", age: "?", anecdote: "Règne troublé par un usurpateur appelé Amenmes." },
+      { name: "Amenmes", reign: "-1202 à -1199", duration: "~3 ans", age: "?", anecdote: "Usurpateur qui a régné en parallèle dans le Sud !" },
+      { name: "Siptah", reign: "-1197 à -1191", duration: "~6 ans", age: "~16 ans", anecdote: "Devenu roi enfant, il avait un pied bot probablement causé par la polio." },
+      { name: "Taousert", reign: "-1191 à -1189", duration: "~2 ans", age: "?", anecdote: "REINE-PHARAON ! Veuve de Séthi II, elle a pris le pouvoir après la mort de Siptah." }
+    ]
+  },
+  {
+    period: "Nouvel Empire",
+    periodColor: "#bc6c25",
+    number: 20,
+    name: "XXe dynastie",
+    startYear: -1186,
+    endYear: -1069,
+    description: "Le déclin de l'empire commence. Invasions des Peuples de la Mer.",
+    pharaohs: [
+      { name: "Sethnakht", reign: "-1186 à -1184", duration: "~2 ans", age: "?", anecdote: "Fondateur d'une nouvelle dynastie après le chaos." },
+      { name: "Ramsès III", reign: "-1184 à -1153", duration: "~31 ans", age: "~65 ans", anecdote: "DERNIER GRAND PHARAON ! Il a repoussé l'invasion des mystérieux PEUPLES DE LA MER. Mais il est mort ASSASSINÉ : la « conspiration du harem » menée par une de ses épouses ! Les analyses récentes de sa momie ont révélé sa gorge tranchée. Son temple à Médinet Habou est extraordinaire.", star: true },
+      { name: "Ramsès IV", reign: "-1153 à -1147", duration: "~6 ans", age: "?", anecdote: "Il aurait prié les dieux pour vivre aussi vieux que Ramsès II... il n'a régné que 6 ans !" },
+      { name: "Ramsès V", reign: "-1147 à -1143", duration: "~4 ans", age: "?", anecdote: "Sa momie montre des traces possibles de VARIOLE — l'un des plus anciens cas connus !" },
+      { name: "Ramsès VI", reign: "-1143 à -1136", duration: "~7 ans", age: "?", anecdote: "Sa tombe a involontairement protégé celle de Toutânkhamon située juste en-dessous, en cachant son entrée sous des gravats !" },
+      { name: "Ramsès VII", reign: "-1136 à -1129", duration: "~7 ans", age: "?", anecdote: "Période d'inflation et de crises économiques." },
+      { name: "Ramsès VIII", reign: "-1129 à -1126", duration: "~3 ans", age: "?", anecdote: "Seul Ramsès dont on n'a jamais retrouvé la tombe !" },
+      { name: "Ramsès IX", reign: "-1126 à -1108", duration: "~18 ans", age: "?", anecdote: "Sous son règne ont eu lieu les premiers grands PILLAGES DE TOMBES royales documentés ! Les procès des voleurs sont conservés sur papyrus." },
+      { name: "Ramsès X", reign: "-1108 à -1099", duration: "~9 ans", age: "?", anecdote: "Règne mal connu. Le pouvoir royal s'effrite." },
+      { name: "Ramsès XI", reign: "-1099 à -1069", duration: "~30 ans", age: "?", anecdote: "Dernier pharaon du Nouvel Empire ! À la fin de son règne, le grand-prêtre d'Amon contrôle plus de pouvoir que lui." }
+    ]
+  },
+
+  // ============ TROISIÈME PÉRIODE INTERMÉDIAIRE ============
+  {
+    period: "3e Période Intermédiaire",
+    periodColor: "#8b6f47",
+    number: 21,
+    name: "XXIe dynastie",
+    startYear: -1069,
+    endYear: -945,
+    description: "L'Égypte est divisée : pharaons à Tanis au Nord, grands-prêtres d'Amon à Thèbes au Sud.",
+    pharaohs: [
+      { name: "Smendès Ier", reign: "-1069 à -1043", duration: "~26 ans", age: "?", anecdote: "Premier roi de Tanis, la nouvelle capitale du Nord." },
+      { name: "Psousennès Ier", reign: "-1039 à -991", duration: "~48 ans", age: "?", anecdote: "TRÉSOR INCROYABLE ! Sa tombe à Tanis a été retrouvée intacte en 1940 avec un masque d'or et un sarcophage en ARGENT (plus rare et précieux que l'or à l'époque !).", star: true },
+      { name: "Aménémopé", reign: "-993 à -984", duration: "~9 ans", age: "?", anecdote: "Sa tombe à Tanis aussi contenait un masque d'or magnifique." },
+      { name: "Siamon", reign: "-978 à -959", duration: "~19 ans", age: "?", anecdote: "Aurait donné sa fille en mariage au roi Salomon de la Bible !" }
+    ]
+  },
+  {
+    period: "3e Période Intermédiaire",
+    periodColor: "#8b6f47",
+    number: 22,
+    name: "XXIIe dynastie (Libyens)",
+    startYear: -945,
+    endYear: -715,
+    description: "Dynastie d'origine libyenne. Première fois que des étrangers occidentaux règnent.",
+    pharaohs: [
+      { name: "Sheshonq Ier", reign: "-945 à -924", duration: "~21 ans", age: "?", anecdote: "Le « SHISHAQ » de la Bible ! Il a pillé Jérusalem et le temple de Salomon vers -925. Son butin est gravé sur le mur du temple de Karnak.", star: true },
+      { name: "Osorkon Ier", reign: "-924 à -889", duration: "~35 ans", age: "?", anecdote: "Long règne pacifique." },
+      { name: "Osorkon II", reign: "-874 à -850", duration: "~24 ans", age: "?", anecdote: "Sa tombe à Tanis abritait un magnifique pectoral en or." }
+    ]
+  },
+  {
+    period: "3e Période Intermédiaire",
+    periodColor: "#8b6f47",
+    number: 25,
+    name: "XXVe dynastie (Nubiens/Koushites)",
+    startYear: -747,
+    endYear: -656,
+    description: "Les rois noirs de Nubie ! Des pharaons venus du Soudan actuel règnent sur l'Égypte.",
+    pharaohs: [
+      { name: "Piânkhy (Piye)", reign: "-747 à -716", duration: "~31 ans", age: "?", anecdote: "PHARAON NUBIEN ! Venu du Soudan, il a conquis l'Égypte. Il adorait tellement les CHEVAUX qu'il a fait enterrer ses chevaux préférés avec lui !", star: true },
+      { name: "Chabaka", reign: "-716 à -702", duration: "~14 ans", age: "?", anecdote: "Frère de Piânkhy. Il a fait copier d'anciens textes religieux pour les sauver de la destruction." },
+      { name: "Chabataka", reign: "-702 à -690", duration: "~12 ans", age: "?", anecdote: "Il a fait face aux premières menaces des terribles Assyriens." },
+      { name: "Taharqa", reign: "-690 à -664", duration: "~26 ans", age: "?", anecdote: "PHARAON-GUERRIER NUBIEN ! Mentionné dans la Bible. Il a combattu les Assyriens mais a fini par perdre. Constructeur prolifique : ses sphinx noirs sont magnifiques.", star: true },
+      { name: "Tanoutamon", reign: "-664 à -656", duration: "~8 ans", age: "?", anecdote: "Dernier roi nubien. Les Assyriens ont SACCAGÉ Thèbes sous son règne — un événement traumatique." }
+    ]
+  },
+
+  // ============ BASSE ÉPOQUE ============
+  {
+    period: "Basse Époque",
+    periodColor: "#a0522d",
+    number: 26,
+    name: "XXVIe dynastie (Saïte)",
+    startYear: -664,
+    endYear: -525,
+    description: "Renaissance saïte. L'Égypte connaît un dernier âge d'or, fascinée par son passé glorieux.",
+    pharaohs: [
+      { name: "Psammétique Ier", reign: "-664 à -610", duration: "~54 ans", age: "?", anecdote: "Il a réunifié l'Égypte avec l'aide de mercenaires grecs et libyens. Il aurait fait une expérience étrange : élever deux bébés sans entendre parler pour découvrir la « langue originelle » !" },
+      { name: "Néchao II", reign: "-610 à -595", duration: "~15 ans", age: "?", anecdote: "Il a lancé le creusement d'un canal entre le Nil et la mer Rouge (l'ancêtre du canal de Suez !) et fait faire le PREMIER TOUR D'AFRIQUE de l'histoire par des marins phéniciens." },
+      { name: "Psammétique II", reign: "-595 à -589", duration: "~6 ans", age: "?", anecdote: "Il a mené une expédition jusqu'en Nubie, où ses soldats grecs ont gravé des graffitis sur les colosses d'Abou Simbel — encore visibles aujourd'hui !" },
+      { name: "Apriès", reign: "-589 à -570", duration: "~19 ans", age: "?", anecdote: "Renversé par son général Amasis lors d'une révolte de ses soldats égyptiens." },
+      { name: "Amasis", reign: "-570 à -526", duration: "~44 ans", age: "?", anecdote: "Pharaon SYMPATHIQUE et populaire ! Hérodote raconte plein d'histoires drôles à son sujet : il aurait été un voleur dans sa jeunesse, et travaillait sérieusement le matin et faisait la fête l'après-midi !" },
+      { name: "Psammétique III", reign: "-526 à -525", duration: "~6 mois", age: "?", anecdote: "Dernier pharaon indépendant avant la conquête perse. Vaincu à Péluse par Cambyse II." }
+    ]
+  },
+  {
+    period: "Basse Époque",
+    periodColor: "#a0522d",
+    number: 27,
+    name: "XXVIIe dynastie (1ère domination perse)",
+    startYear: -525,
+    endYear: -404,
+    description: "Les rois perses se proclament pharaons d'Égypte.",
+    pharaohs: [
+      { name: "Cambyse II", reign: "-525 à -522", duration: "~3 ans", age: "?", anecdote: "Roi perse qui a conquis l'Égypte. Hérodote raconte qu'il aurait perdu une armée entière dans le désert ! On a peut-être retrouvé ses traces récemment." },
+      { name: "Darius Ier", reign: "-522 à -486", duration: "~36 ans", age: "?", anecdote: "Le grand roi perse ! Il a achevé le canal Nil-mer Rouge commencé par Néchao II." },
+      { name: "Xerxès Ier", reign: "-486 à -465", duration: "~21 ans", age: "?", anecdote: "Le célèbre roi perse qui a combattu les Grecs aux Thermopyles et à Salamine." }
+    ]
+  },
+  {
+    period: "Basse Époque",
+    periodColor: "#a0522d",
+    number: 30,
+    name: "XXVIIIe-XXXe dynasties (dernière indépendance)",
+    startYear: -404,
+    endYear: -343,
+    description: "L'Égypte retrouve brièvement son indépendance. Dernières dynasties indigènes !",
+    pharaohs: [
+      { name: "Amyrtée", reign: "-404 à -399", duration: "~5 ans", age: "?", anecdote: "Le SEUL roi de la XXVIIIe dynastie ! Il a libéré l'Égypte des Perses." },
+      { name: "Néphéritès Ier", reign: "-399 à -393", duration: "~6 ans", age: "?", anecdote: "Fondateur de la XXIXe dynastie." },
+      { name: "Nectanébo Ier", reign: "-380 à -362", duration: "~18 ans", age: "?", anecdote: "Fondateur de la XXXe dynastie. Grand bâtisseur." },
+      { name: "Téos", reign: "-362 à -360", duration: "~2 ans", age: "?", anecdote: "Renversé par son neveu pendant qu'il faisait la guerre !" },
+      { name: "Nectanébo II", reign: "-360 à -343", duration: "~17 ans", age: "?", anecdote: "DERNIER PHARAON ÉGYPTIEN INDIGÈNE ! Vaincu par les Perses, il a fui en Nubie. La légende romanesque raconte qu'il serait devenu... le vrai père d'Alexandre le Grand !", star: true }
+    ]
+  },
+
+  // ============ ÉPOQUE GRECQUE ============
+  {
+    period: "Époque Gréco-Romaine",
+    periodColor: "#7d5a50",
+    number: 32,
+    name: "Conquête macédonienne",
+    startYear: -332,
+    endYear: -305,
+    description: "Alexandre le Grand conquiert l'Égypte et fonde Alexandrie.",
+    pharaohs: [
+      { name: "Alexandre le Grand", reign: "-332 à -323", duration: "~9 ans", age: "32 ans", anecdote: "LE PLUS GRAND CONQUÉRANT DU MONDE ANTIQUE ! Il a libéré les Égyptiens des Perses qu'ils détestaient. À l'oasis de Siwa, il a été proclamé « Fils d'Amon » par l'oracle. Il a fondé ALEXANDRIE qui restera la plus grande ville du monde pendant des siècles. Mort à 32 ans à Babylone.", star: true },
+      { name: "Philippe Arrhidée", reign: "-323 à -317", duration: "~6 ans", age: "?", anecdote: "Demi-frère d'Alexandre, simple d'esprit. Roi-fantôme manipulé par les généraux." },
+      { name: "Alexandre IV", reign: "-317 à -305", duration: "~12 ans", age: "13 ans", anecdote: "Fils posthume d'Alexandre le Grand. Assassiné enfant par les généraux qui voulaient se partager l'empire." }
+    ]
+  },
+  {
+    period: "Époque Gréco-Romaine",
+    periodColor: "#7d5a50",
+    number: 33,
+    name: "Dynastie Lagide (Ptolémées)",
+    startYear: -305,
+    endYear: -30,
+    description: "Les descendants du général grec Ptolémée règnent pendant 275 ans. La dernière dynastie pharaonique !",
+    pharaohs: [
+      { name: "Ptolémée Ier Sôter", reign: "-305 à -282", duration: "~23 ans", age: "~84 ans", anecdote: "Général d'Alexandre, il a VOLÉ son corps pour le ramener à Alexandrie ! Il a fondé la légendaire BIBLIOTHÈQUE D'ALEXANDRIE et le Phare d'Alexandrie, l'une des 7 merveilles du monde !", star: true },
+      { name: "Ptolémée II Philadelphe", reign: "-285 à -246", duration: "~39 ans", age: "~63 ans", anecdote: "Il a épousé sa SŒUR Arsinoé II (« Philadelphe » signifie « qui aime sa sœur ») — choquant pour les Grecs mais traditionnel pour les pharaons. Sous son règne, la Bible a été traduite en grec (la Septante)." },
+      { name: "Ptolémée III Évergète", reign: "-246 à -222", duration: "~24 ans", age: "?", anecdote: "Apogée de l'empire lagide. Il a conquis temporairement la Syrie et rapporté en Égypte des statues volées par les Perses 300 ans plus tôt !" },
+      { name: "Ptolémée IV Philopator", reign: "-222 à -204", duration: "~18 ans", age: "?", anecdote: "Roi décadent qui a fait construire un BATEAU GÉANT de 130 mètres avec 4000 rameurs — probablement plus pour la parade que pour naviguer !" },
+      { name: "Ptolémée V Épiphane", reign: "-204 à -180", duration: "~24 ans", age: "~30 ans", anecdote: "C'est en son honneur qu'a été gravée la PIERRE DE ROSETTE, qui a permis à Champollion de déchiffrer les hiéroglyphes en 1822 !", star: true },
+      { name: "Ptolémée VI Philomètor", reign: "-180 à -145", duration: "~35 ans", age: "?", anecdote: "Chassé d'Égypte, il s'est rendu à Rome en habits de simple voyageur pour demander de l'aide !" },
+      { name: "Ptolémée VIII Évergète II", reign: "-170 à -116", duration: "(par intermittence)", age: "?", anecdote: "Surnommé « Physcon » (le ventru) à cause de son obésité ! Roi cruel et impopulaire." },
+      { name: "Cléopâtre III", reign: "-116 à -101", duration: "~15 ans", age: "?", anecdote: "Reine puissante qui a régné avec ses fils." },
+      { name: "Ptolémée XII Aulète", reign: "-80 à -51", duration: "~29 ans", age: "?", anecdote: "Surnommé « le joueur de flûte » ! Père de Cléopâtre VII. Il s'est ridiculisé en allant supplier les Romains." },
+      { name: "Cléopâtre VII", reign: "-51 à -30", duration: "~21 ans", age: "39 ans", anecdote: "LA PLUS CÉLÈBRE REINE DE L'HISTOIRE ! Intelligente, polyglotte (elle parlait 9 langues dont l'égyptien — la première de sa dynastie !), elle a séduit JULES CÉSAR puis MARC ANTOINE pour sauver l'Égypte. Vaincue par Octave (Auguste), elle s'est suicidée — selon la légende avec un cobra. Sa mort marque la FIN DE L'ÉGYPTE PHARAONIQUE après 3000 ans !", star: true },
+      { name: "Ptolémée XV Césarion", reign: "-44 à -30", duration: "~14 ans", age: "17 ans", anecdote: "Fils de Cléopâtre et Jules César. DERNIER PHARAON D'ÉGYPTE. Assassiné par Octave à 17 ans pour éliminer tout héritier de César. Avec lui s'éteint la civilisation pharaonique !", star: true }
+    ]
+  }
+];
+
+</script>
+<script>
+// Regrouper par période
+function groupByPeriod(dynasties) {
+  const groups = {};
+  dynasties.forEach(d => {
+    if (!groups[d.period]) {
+      groups[d.period] = { name: d.period, color: d.periodColor, dynasties: [] };
+    }
+    groups[d.period].dynasties.push(d);
+  });
+  return Object.values(groups);
+}
+
+// Construire la nav
+function buildNav() {
+  const nav = document.getElementById('navPeriod');
+  const periods = groupByPeriod(DYNASTIES);
+  periods.forEach((p, idx) => {
+    const btn = document.createElement('button');
+    btn.textContent = p.name;
+    btn.style.borderColor = p.color;
+    btn.addEventListener('click', () => {
+      document.getElementById('period-' + idx).scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+    nav.appendChild(btn);
+  });
+}
+
+// Construire les dynasties
+function buildDynasties() {
+  const container = document.getElementById('dynasties');
+  const periods = groupByPeriod(DYNASTIES);
+
+  periods.forEach((period, pIdx) => {
+    period.dynasties.forEach((dyn, dIdx) => {
+      const block = document.createElement('section');
+      block.className = 'dynasty';
+      if (dIdx === 0) block.id = 'period-' + pIdx;
+      block.style.setProperty('--dynasty-color', dyn.periodColor);
+
+      const header = document.createElement('div');
+      header.className = 'dynasty-header';
+      header.style.setProperty('--dynasty-color', dyn.periodColor);
+      header.innerHTML = `
+        <span class="dynasty-period">${dyn.period}</span>
+        <h2 class="dynasty-name">${dyn.name}</h2>
+        <span class="dynasty-dates">${formatYear(dyn.startYear)} — ${formatYear(dyn.endYear)}</span>
+        <p class="dynasty-description">${dyn.description}</p>
+      `;
+      block.appendChild(header);
+
+      const grid = document.createElement('div');
+      grid.className = 'pharaohs-grid';
+
+      dyn.pharaohs.forEach(p => {
+        const card = document.createElement('button');
+        card.className = 'pharaoh' + (p.star ? ' star' : '');
+        card.setAttribute('type', 'button');
+        card.innerHTML = `
+          <div class="pharaoh-name">${p.name}</div>
+          <div class="pharaoh-meta">
+            <div><span class="label">Règne</span> ${p.reign}</div>
+            <div><span class="label">Durée</span> ${p.duration}</div>
+            <div><span class="label">Âge</span> ${p.age}</div>
+          </div>
+          <div class="pharaoh-cta">Lire l'anecdote →</div>
+        `;
+        card.addEventListener('click', () => openModal(p, dyn));
+        grid.appendChild(card);
+      });
+
+      block.appendChild(grid);
+      container.appendChild(block);
+    });
+  });
+}
+
+function formatYear(year) {
+  if (year < 0) return Math.abs(year) + ' av. J.-C.';
+  return year + ' apr. J.-C.';
+}
+
+// Modal
+function openModal(p, dyn) {
+  document.getElementById('modalName').textContent = p.name;
+  document.getElementById('modalDynasty').textContent = dyn.name + ' • ' + dyn.period;
+  document.getElementById('modalReign').textContent = p.reign;
+  document.getElementById('modalDuration').textContent = p.duration;
+  document.getElementById('modalAge').textContent = p.age;
+  document.getElementById('modalAnecdote').textContent = p.anecdote;
+  document.getElementById('modal').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('modalClose').addEventListener('click', closeModal);
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// Init
+buildNav();
+buildDynasties();
+</script>
+
+</body>
+</html>
