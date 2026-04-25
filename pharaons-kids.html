@@ -6,6 +6,7 @@
 <title>Les Pharaons — Aventure en Égypte !</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#f5a623">
+<meta name="referrer" content="no-referrer">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <style>
@@ -834,7 +835,7 @@ body::after {
 <div class="detail-screen" id="detailScreen">
   <div class="detail-header">
     <div class="detail-bg-fallback" id="detailBgEmoji"></div>
-    <img class="detail-bg" id="detailBgImg" src="" alt="" onerror="this.style.display='none'">
+    <img class="detail-bg" id="detailBgImg" src="" alt="" referrerpolicy="no-referrer" onerror="this.style.display='none'">
     <div class="detail-header-overlay"></div>
     <button class="detail-back" onclick="closeDetail()">←</button>
     <div class="detail-title">
@@ -1172,7 +1173,7 @@ function buildFrise() {
         card.className = 'pharaoh-card' + (ph.star ? ' star' : '');
         card.style.setProperty('--dynasty-color', p.color);
         card.innerHTML = `
-          <div class="pharaoh-avatar">${ph.img ? `<img src="${ph.img}" alt="${ph.name}" onerror="this.parentNode.textContent='${ph.emoji}'">` : ph.emoji}</div>
+          <div class="pharaoh-avatar">${ph.img ? `<img src="${ph.img}" alt="${ph.name}" referrerpolicy="no-referrer" onerror="this.parentNode.textContent='${ph.emoji}'">` : ph.emoji}</div>
           <div class="pharaoh-info">
             <h4>${ph.name}</h4>
             <div class="reign">${ph.years} · ${ph.duration}</div>
@@ -1218,7 +1219,7 @@ function openDetail(ph, period, dyn) {
     monSection.style.display = '';
     const wrap = document.getElementById('monumentImgWrap');
     if (ph.monumentImg) {
-      wrap.innerHTML = `<img src="${ph.monumentImg}" alt="${ph.monument}" onerror="this.parentNode.innerHTML='<div class=monument-emoji-fallback>${ph.monumentEmoji}</div>'">`;
+      wrap.innerHTML = `<img src="${ph.monumentImg}" alt="${ph.monument}" referrerpolicy="no-referrer" onerror="this.parentNode.innerHTML='<div class=monument-emoji-fallback>${ph.monumentEmoji}</div>'">`;
     } else {
       wrap.innerHTML = `<div class="monument-emoji-fallback">${ph.monumentEmoji}</div>`;
     }
@@ -1275,7 +1276,7 @@ function showQuestion() {
   const imgWrap = document.getElementById('questionImgWrap');
   if (q.img) {
     imgWrap.style.display = '';
-    imgWrap.innerHTML = `<img src="${q.img}" alt="" style="width:100%;border-radius:16px;" onerror="this.parentNode.innerHTML='<div class=quiz-question-emoji>🏺</div>'">`;
+    imgWrap.innerHTML = `<img src="${q.img}" alt="" style="width:100%;border-radius:16px;" referrerpolicy="no-referrer" onerror="this.parentNode.innerHTML='<div class=quiz-question-emoji>🏺</div>'">`;
   } else {
     imgWrap.style.display = 'none';
     imgWrap.innerHTML = '';
