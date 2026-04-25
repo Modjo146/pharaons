@@ -1,0 +1,1375 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Les Pharaons — Aventure en Égypte !</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#f5a623">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Nunito:wght@400;600;700;800;900&display=swap');
+
+:root {
+  --sand: #fde68a;
+  --sand-dark: #f5a623;
+  --sky: #38bdf8;
+  --sky-dark: #0284c7;
+  --nile: #06b6d4;
+  --gold: #f59e0b;
+  --gold-deep: #d97706;
+  --red: #ef4444;
+  --green: #22c55e;
+  --purple: #a855f7;
+  --ink: #1c1917;
+  --white: #fffbeb;
+  --card-bg: #fff7ed;
+  --shadow: 0 4px 0 rgba(0,0,0,0.15);
+  --shadow-lg: 0 8px 0 rgba(0,0,0,0.15);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { font-size: 16px; }
+
+body {
+  background: #fef3c7;
+  font-family: 'Nunito', 'Baloo 2', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  position: relative;
+}
+
+/* Fond décoratif */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 40% at 50% 0%, #fed7aa 0%, transparent 60%),
+    radial-gradient(ellipse 60% 30% at 50% 100%, #bae6fd 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Sable en bas */
+body::after {
+  content: '';
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 80px;
+  background: linear-gradient(to top, #f5a623 0%, transparent 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Navigation principale */
+.app {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header */
+.header {
+  background: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+  padding: 1rem 1rem 1.5rem;
+  text-align: center;
+  position: relative;
+  box-shadow: 0 4px 0 #b45309;
+}
+
+.header-emoji {
+  font-size: 2.5rem;
+  line-height: 1;
+  margin-bottom: 0.3rem;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+  animation: wobble 3s ease-in-out infinite;
+}
+
+@keyframes wobble {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.header h1 {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2.2rem);
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 3px 0 rgba(0,0,0,0.2);
+  letter-spacing: 0.02em;
+}
+
+.header p {
+  color: rgba(255,255,255,0.9);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-top: 0.2rem;
+}
+
+/* Tabs navigation */
+.tabs {
+  display: flex;
+  background: #b45309;
+  padding: 0 0.5rem;
+}
+
+.tab-btn {
+  flex: 1;
+  padding: 0.75rem 0.5rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: rgba(255,255,255,0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  transition: all 0.2s;
+  border-bottom: 3px solid transparent;
+}
+
+.tab-btn .tab-icon { font-size: 1.4rem; }
+
+.tab-btn.active {
+  color: white;
+  border-bottom-color: #fde68a;
+}
+
+/* Contenu */
+.screen {
+  display: none;
+  flex: 1;
+  padding: 1rem;
+  animation: fadeSlide 0.3s ease;
+}
+.screen.active { display: block; }
+
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* =================== FRISE =================== */
+
+.period-nav {
+  display: flex;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding: 0.5rem 0 1rem;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+.period-nav::-webkit-scrollbar { display: none; }
+
+.period-pill {
+  flex-shrink: 0;
+  padding: 0.4rem 0.9rem;
+  border-radius: 999px;
+  border: none;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: var(--shadow);
+  transition: transform 0.15s;
+  color: white;
+}
+.period-pill:active { transform: scale(0.95); }
+
+.dynasty-block {
+  margin-bottom: 2rem;
+  scroll-margin-top: 1rem;
+}
+
+.dynasty-title {
+  background: white;
+  border-radius: 16px 16px 0 0;
+  padding: 0.8rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  box-shadow: var(--shadow);
+}
+
+.dynasty-emoji { font-size: 1.8rem; }
+
+.dynasty-title-text h3 {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.dynasty-title-text p {
+  font-size: 0.8rem;
+  color: #78716c;
+  font-weight: 600;
+}
+
+.dynasty-desc {
+  background: rgba(255,255,255,0.6);
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: #57534e;
+  font-weight: 600;
+  border-left: 4px solid var(--dynasty-color, var(--gold));
+  margin-bottom: 0.8rem;
+}
+
+.pharaohs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+/* Carte pharaon */
+.pharaoh-card {
+  background: white;
+  border-radius: 16px;
+  padding: 0.9rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  position: relative;
+  overflow: hidden;
+}
+
+.pharaoh-card:active { transform: scale(0.98); }
+
+.pharaoh-card.star {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+}
+
+.pharaoh-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--dynasty-color, var(--gold));
+  border-radius: 4px 0 0 4px;
+}
+
+.pharaoh-avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  object-fit: cover;
+  flex-shrink: 0;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.8rem;
+  overflow: hidden;
+}
+
+.pharaoh-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.pharaoh-info { flex: 1; min-width: 0; }
+
+.pharaoh-info h4 {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 0.1rem;
+}
+
+.pharaoh-info .reign {
+  font-size: 0.78rem;
+  color: #78716c;
+  font-weight: 600;
+}
+
+.star-badge {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+/* =================== DÉTAIL PHARAON =================== */
+.detail-screen {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: #fef3c7;
+  overflow-y: auto;
+  animation: slideInUp 0.3s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+.detail-screen.active { display: block; }
+
+.detail-header {
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 1rem;
+  overflow: hidden;
+}
+
+.detail-bg {
+  position: absolute;
+  inset: 0;
+  object-fit: cover;
+  width: 100%;
+  height: 100%;
+}
+
+.detail-bg-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 6rem;
+}
+
+.detail-header-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 60%);
+}
+
+.detail-back {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  background: rgba(0,0,0,0.4);
+  border: none;
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+  z-index: 2;
+}
+
+.detail-title {
+  position: relative;
+  z-index: 2;
+}
+
+.detail-title h2 {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  font-weight: 800;
+  color: white;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+.detail-title .dynasty-label {
+  background: rgba(255,255,255,0.2);
+  color: white;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  backdrop-filter: blur(4px);
+  display: inline-block;
+  margin-bottom: 0.4rem;
+}
+
+.detail-body { padding: 1.2rem 1rem 3rem; }
+
+.detail-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.2rem;
+}
+
+.chip {
+  background: white;
+  border-radius: 999px;
+  padding: 0.35rem 0.8rem;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.anecdote-box {
+  background: white;
+  border-radius: 20px;
+  padding: 1.2rem;
+  box-shadow: var(--shadow-lg);
+  border-left: 5px solid var(--gold);
+  margin-bottom: 1rem;
+}
+
+.anecdote-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--gold-deep);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.anecdote-text {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #292524;
+  font-weight: 600;
+}
+
+/* Photo du monument */
+.monument-section {
+  margin-top: 1rem;
+}
+
+.monument-label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #78716c;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.monument-img-wrap {
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  background: #e7e5e4;
+  min-height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.monument-img-wrap img {
+  width: 100%;
+  display: block;
+  border-radius: 16px;
+}
+
+.monument-emoji-fallback {
+  font-size: 4rem;
+  padding: 2rem;
+}
+
+.monument-caption {
+  font-size: 0.78rem;
+  color: #78716c;
+  font-weight: 600;
+  margin-top: 0.4rem;
+  text-align: center;
+}
+
+/* =================== QUIZ =================== */
+.quiz-intro {
+  text-align: center;
+  padding: 1rem 0 1.5rem;
+}
+
+.quiz-intro h2 {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 0.3rem;
+}
+
+.quiz-intro p {
+  color: #78716c;
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+
+.quiz-start-btn {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 1rem 2.5rem;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 0 #b45309;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+}
+.quiz-start-btn:active { transform: translateY(3px); box-shadow: 0 3px 0 #b45309; }
+
+.quiz-score-display {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin: 1rem 0;
+}
+
+.score-item {
+  text-align: center;
+  background: white;
+  border-radius: 16px;
+  padding: 0.7rem 1.5rem;
+  box-shadow: var(--shadow);
+}
+.score-item .num {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+.score-item .lbl {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #78716c;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Question */
+.quiz-question-wrap {
+  background: white;
+  border-radius: 24px;
+  padding: 1.2rem;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 1rem;
+}
+
+.quiz-question-img {
+  width: 100%;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  min-height: 150px;
+  background: #f3f4f6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.quiz-question-img img {
+  width: 100%;
+  display: block;
+  border-radius: 16px;
+}
+
+.quiz-question-emoji {
+  font-size: 5rem;
+  padding: 1rem;
+}
+
+.quiz-question-text {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  line-height: 1.4;
+}
+
+.quiz-type-badge {
+  display: inline-block;
+  background: #e0f2fe;
+  color: #0369a1;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+}
+
+/* Options */
+.quiz-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.7rem;
+  margin-bottom: 1rem;
+}
+
+.quiz-option {
+  background: white;
+  border: 3px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 0.8rem 0.6rem;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: all 0.15s;
+  line-height: 1.3;
+}
+
+.quiz-option:active { transform: scale(0.97); }
+.quiz-option.correct { background: #dcfce7; border-color: var(--green); color: #166534; }
+.quiz-option.wrong { background: #fee2e2; border-color: var(--red); color: #991b1b; }
+.quiz-option.reveal { background: #dcfce7; border-color: var(--green); color: #166534; opacity: 0.6; }
+.quiz-option:disabled { cursor: default; }
+
+/* Feedback */
+.quiz-feedback {
+  display: none;
+  background: white;
+  border-radius: 20px;
+  padding: 1rem 1.2rem;
+  box-shadow: var(--shadow);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.quiz-feedback.show { display: block; animation: popIn 0.3s cubic-bezier(0.2,0.9,0.3,1.3); }
+
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.feedback-emoji { font-size: 3rem; margin-bottom: 0.3rem; }
+.feedback-title {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.2rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+.feedback-text { font-size: 0.9rem; font-weight: 600; color: #57534e; line-height: 1.4; }
+
+.quiz-next-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #06b6d4, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  padding: 0.9rem;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #0e7490;
+  transition: all 0.15s;
+}
+.quiz-next-btn:active { transform: translateY(2px); box-shadow: 0 2px 0 #0e7490; }
+
+/* Résultats quiz */
+.quiz-results {
+  text-align: center;
+  padding: 2rem 1rem;
+  animation: popIn 0.4s cubic-bezier(0.2,0.9,0.3,1.2);
+}
+.results-emoji { font-size: 5rem; margin-bottom: 0.5rem; }
+.results-title {
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 800;
+  margin-bottom: 0.3rem;
+}
+.results-score {
+  font-size: 3rem;
+  font-weight: 900;
+  font-family: 'Baloo 2', sans-serif;
+  color: var(--gold-deep);
+  margin: 0.5rem 0;
+}
+.results-msg { font-size: 1rem; font-weight: 600; color: #57534e; margin-bottom: 2rem; }
+.quiz-replay-btn {
+  background: linear-gradient(135deg, #f59e0b, #ef4444);
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 0.9rem 2rem;
+  font-family: 'Baloo 2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 5px 0 #b45309;
+  transition: all 0.15s;
+}
+.quiz-replay-btn:active { transform: translateY(2px); box-shadow: 0 3px 0 #b45309; }
+
+/* Progress bar */
+.quiz-progress {
+  height: 8px;
+  background: #e5e7eb;
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.quiz-progress-bar {
+  height: 100%;
+  background: linear-gradient(to right, #f59e0b, #ef4444);
+  border-radius: 999px;
+  transition: width 0.4s ease;
+}
+
+/* Stars trophy */
+.trophy-stars { display: flex; justify-content: center; gap: 0.3rem; margin: 0.5rem 0; font-size: 2rem; }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <header class="header">
+    <div class="header-emoji">𓂀</div>
+    <h1>Les Pharaons d'Égypte</h1>
+    <p>Explore l'Égypte ancienne !</p>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" onclick="showTab('frise')" id="tab-frise">
+      <span class="tab-icon">📜</span> Frise
+    </button>
+    <button class="tab-btn" onclick="showTab('quiz')" id="tab-quiz">
+      <span class="tab-icon">🎯</span> Quiz
+    </button>
+  </nav>
+
+  <!-- ÉCRAN FRISE -->
+  <div class="screen active" id="screen-frise">
+    <div class="period-nav" id="periodNav"></div>
+    <div id="dynastiesContainer"></div>
+  </div>
+
+  <!-- ÉCRAN QUIZ -->
+  <div class="screen" id="screen-quiz">
+    <div id="quizIntro" class="quiz-intro">
+      <div style="font-size:4rem;margin-bottom:0.5rem;">🏆</div>
+      <h2>Le Grand Quiz !</h2>
+      <p>Réponds aux questions sur les pharaons.<br>Tu peux le faire ! 🌟</p>
+      <button class="quiz-start-btn" onclick="startQuiz()">C'est parti ! 🚀</button>
+    </div>
+
+    <div id="quizGame" style="display:none;">
+      <div class="quiz-progress"><div class="quiz-progress-bar" id="progressBar"></div></div>
+      <div class="quiz-score-display">
+        <div class="score-item">
+          <div class="num" id="scoreGood">0</div>
+          <div class="lbl">✅ Bonnes</div>
+        </div>
+        <div class="score-item">
+          <div class="num" id="scoreQ">1</div>
+          <div class="lbl">📋 Question</div>
+        </div>
+        <div class="score-item">
+          <div class="num" id="scoreTotal">10</div>
+          <div class="lbl">🎯 Total</div>
+        </div>
+      </div>
+
+      <div class="quiz-question-wrap">
+        <span class="quiz-type-badge" id="quizTypeBadge">QCM</span>
+        <div class="quiz-question-img" id="questionImgWrap"></div>
+        <div class="quiz-question-text" id="questionText"></div>
+      </div>
+
+      <div class="quiz-options" id="quizOptions"></div>
+
+      <div class="quiz-feedback" id="quizFeedback">
+        <div class="feedback-emoji" id="feedbackEmoji"></div>
+        <div class="feedback-title" id="feedbackTitle"></div>
+        <div class="feedback-text" id="feedbackText"></div>
+      </div>
+
+      <button class="quiz-next-btn" id="nextBtn" style="display:none;" onclick="nextQuestion()">
+        Question suivante ➡️
+      </button>
+    </div>
+
+    <div id="quizResults" style="display:none;" class="quiz-results">
+      <div class="results-emoji" id="resultsEmoji"></div>
+      <div class="results-title" id="resultsTitle"></div>
+      <div class="trophy-stars" id="trophyStars"></div>
+      <div class="results-score" id="resultsScore"></div>
+      <div class="results-msg" id="resultsMsg"></div>
+      <button class="quiz-replay-btn" onclick="startQuiz()">Rejouer ! 🔄</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- DÉTAIL PHARAON -->
+<div class="detail-screen" id="detailScreen">
+  <div class="detail-header">
+    <div class="detail-bg-fallback" id="detailBgEmoji"></div>
+    <img class="detail-bg" id="detailBgImg" src="" alt="" onerror="this.style.display='none'">
+    <div class="detail-header-overlay"></div>
+    <button class="detail-back" onclick="closeDetail()">←</button>
+    <div class="detail-title">
+      <div class="dynasty-label" id="detailDynasty"></div>
+      <h2 id="detailName"></h2>
+    </div>
+  </div>
+  <div class="detail-body">
+    <div class="detail-chips" id="detailChips"></div>
+    <div class="anecdote-box">
+      <div class="anecdote-label">⭐ Le savais-tu ?</div>
+      <div class="anecdote-text" id="detailAnecdote"></div>
+    </div>
+    <div class="monument-section" id="monumentSection">
+      <div class="monument-label">🏛️ À voir en Égypte</div>
+      <div class="monument-img-wrap" id="monumentImgWrap"></div>
+      <div class="monument-caption" id="monumentCaption"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DONNÉES
+// ============================================================
+
+const PERIODS = [
+  {
+    id: 'thinite', name: 'Période Thinite', color: '#8b5cf6', emoji: '👑',
+    years: '-3150 à -2686',
+    desc: 'L\'Égypte s\'unifie pour la première fois !',
+    dynasties: [
+      {
+        name: 'Ire et IIe dynasties', years: '-3150 à -2686',
+        pharaohs: [
+          { name: 'Narmer', years: 'vers -3150', duration: '~30 ans', age: '?', emoji: '👑', star: true,
+            anecdote: 'C\'est le TOUT PREMIER pharaon d\'Égypte ! Il a réuni la Haute et la Basse Égypte en un seul grand pays. Sa célèbre palette en pierre montre les deux couronnes réunies.',
+            monument: 'Palette de Narmer', monumentEmoji: '🪨',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/NarmerPalette_ROM.png/250px-NarmerPalette_ROM.png',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/NarmerPalette_ROM.png/250px-NarmerPalette_ROM.png',
+          },
+          { name: 'Den', years: 'vers -2990', duration: '~40 ans', age: '?', emoji: '⚔️', star: false,
+            anecdote: 'Il est le premier pharaon représenté avec la DOUBLE couronne — la rouge et la blanche ensemble ! Il a aussi inventé une grande fête pour "rajeunir" le roi tous les 30 ans.',
+            monument: 'Tombe d\'Abydos', monumentEmoji: '⚱️', img: '', monumentImg: '',
+          },
+          { name: 'Khâsekhemoui', years: 'vers -2710', duration: '~24 ans', age: '?', emoji: '🦅', star: false,
+            anecdote: 'Il a mis DEUX animaux sur son nom royal : le faucon Horus ET l\'animal Seth, pour faire la paix entre les deux dieux. Son tombeau contient le plus vieux bijou en or trouvé en Égypte !',
+            monument: 'Tombeau d\'Abydos', monumentEmoji: '⚱️', img: '', monumentImg: '',
+          },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'ancien', name: 'Ancien Empire', color: '#f59e0b', emoji: '🔺',
+    years: '-2686 à -2181',
+    desc: 'L\'âge des grandes pyramides !',
+    dynasties: [
+      {
+        name: 'IIIe dynastie', years: '-2686 à -2613',
+        pharaohs: [
+          { name: 'Djéser', years: '-2670 à -2650', duration: '~20 ans', age: '?', emoji: '🏗️', star: true,
+            anecdote: 'Avec son super architecte Imhotep, Djéser a fait construire la PREMIÈRE pyramide du monde ! C\'est la pyramide à degrés de Saqqarah. Elle ressemble à un escalier géant pour monter jusqu\'aux dieux !',
+            monument: 'Pyramide à degrés de Saqqarah', monumentEmoji: '🔺',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Saqqara_BW_5.jpg/320px-Saqqara_BW_5.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Saqqara_BW_5.jpg/320px-Saqqara_BW_5.jpg',
+          },
+        ]
+      },
+      {
+        name: 'IVe dynastie', years: '-2613 à -2498',
+        pharaohs: [
+          { name: 'Snéfrou', years: '-2613 à -2589', duration: '~24 ans', age: '?', emoji: '🏗️', star: true,
+            anecdote: 'Le roi qui a construit 3 pyramides ! La première a un peu penché... alors il en a fait une deuxième avec deux pentes différentes (la pyramide rhomboïdale). Et enfin la parfaite pyramide rouge !',
+            monument: 'Pyramide rhomboïdale de Dahchour', monumentEmoji: '🔺',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Snefru%27s_Bent_Pyramid_in_Dahshur.jpg/320px-Snefru%27s_Bent_Pyramid_in_Dahshur.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/Snefru%27s_Bent_Pyramid_in_Dahshur.jpg/320px-Snefru%27s_Bent_Pyramid_in_Dahshur.jpg',
+          },
+          { name: 'Khéops', years: '-2589 à -2566', duration: '~23 ans', age: '?', emoji: '🏔️', star: true,
+            anecdote: 'Il a fait construire la GRANDE PYRAMIDE de Gizeh ! Haute comme 40 étages, avec 2 millions de gros blocs de pierre. Elle a été la plus haute construction du monde pendant 3800 ans !',
+            monument: 'Grande Pyramide de Gizeh', monumentEmoji: '🔺',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kheops-Pyramid.jpg/320px-Kheops-Pyramid.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kheops-Pyramid.jpg/320px-Kheops-Pyramid.jpg',
+          },
+          { name: 'Khéphren', years: '-2558 à -2532', duration: '~26 ans', age: '?', emoji: '🦁', star: true,
+            anecdote: 'Fils de Khéops, il a fait construire la 2e grande pyramide de Gizeh. Et aussi le SPHINX GÉANT ! Ce lion avec une tête d\'homme aurait son visage. Le sphinx est haut comme un immeuble de 6 étages !',
+            monument: 'Le Grand Sphinx de Gizeh', monumentEmoji: '🦁',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Sphinx_of_Giza%2C_Giza%2C_Cairo%2C_Egypt.jpg/320px-Sphinx_of_Giza%2C_Giza%2C_Cairo%2C_Egypt.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Sphinx_of_Giza%2C_Giza%2C_Cairo%2C_Egypt.jpg/320px-Sphinx_of_Giza%2C_Giza%2C_Cairo%2C_Egypt.jpg',
+          },
+          { name: 'Mykérinos', years: '-2532 à -2503', duration: '~29 ans', age: '?', emoji: '💎', star: false,
+            anecdote: 'Il a construit la 3e pyramide de Gizeh, plus petite que celles de son papa et grand-papa. Mais elle était couverte de beau granit rouge ! Les Égyptiens le décrivaient comme un roi très gentil.',
+            monument: '3e pyramide de Gizeh', monumentEmoji: '🔺',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/320px-All_Gizah_Pyramids.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/All_Gizah_Pyramids.jpg/320px-All_Gizah_Pyramids.jpg',
+          },
+        ]
+      },
+      {
+        name: 'Ve et VIe dynasties', years: '-2498 à -2181',
+        pharaohs: [
+          { name: 'Ounas', years: '-2375 à -2345', duration: '~30 ans', age: '?', emoji: '📝', star: true,
+            anecdote: 'Sa pyramide cache un trésor unique : les premiers TEXTES DES PYRAMIDES ! Ce sont des formules magiques gravées sur les murs pour aider le roi à voyager dans le paradis des dieux.',
+            monument: 'Pyramide à textes de Saqqarah', monumentEmoji: '📜', img: '', monumentImg: '',
+          },
+          { name: 'Pépi II', years: '-2278 à -2184', duration: '~94 ans', age: '~100 ans', emoji: '👴', star: true,
+            anecdote: 'Il a eu le règne le plus LONG de toute l\'histoire de l\'humanité ! Devenu pharaon à 6 ans, il a régné presque 100 ans. À 8 ans, il a écrit une lettre rigolote pour demander qu\'on lui rapporte un petit bonhomme qui dansait !',
+            monument: 'Pyramide de Saqqarah', monumentEmoji: '🔺', img: '', monumentImg: '',
+          },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'moyen', name: 'Moyen Empire', color: '#10b981', emoji: '🌿',
+    years: '-2040 à -1650',
+    desc: 'L\'Égypte se réunifie et fleurit à nouveau !',
+    dynasties: [
+      {
+        name: 'XIe et XIIe dynasties', years: '-2040 à -1650',
+        pharaohs: [
+          { name: 'Montouhotep II', years: '-2046 à -1995', duration: '~51 ans', age: '?', emoji: '🦅', star: true,
+            anecdote: 'LE GRAND RÉUNIFICATEUR ! L\'Égypte était divisée en deux. Montouhotep II a tout rassemblé en un seul pays. Son beau temple à terrasses est encore debout aujourd\'hui !',
+            monument: 'Temple de Deir el-Bahari', monumentEmoji: '🏛️',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mortuary_Temple_of_Hatshepsut_edit2.jpg/320px-Mortuary_Temple_of_Hatshepsut_edit2.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mortuary_Temple_of_Hatshepsut_edit2.jpg/320px-Mortuary_Temple_of_Hatshepsut_edit2.jpg',
+          },
+          { name: 'Sésostris III', years: '-1878 à -1839', duration: '~39 ans', age: '?', emoji: '⚔️', star: true,
+            anecdote: 'Le super roi-guerrier ! Il a mené 4 grandes batailles en Nubie. Ses statues sont très spéciales : on y voit son visage fatigué et sérieux — ce n\'est plus un visage parfait comme avant, mais un vrai visage humain.',
+            monument: 'Colosses de Sésostris', monumentEmoji: '🗿', img: '', monumentImg: '',
+          },
+          { name: 'Néferousobek', years: '-1782 à -1778', duration: '~4 ans', age: '?', emoji: '👸', star: true,
+            anecdote: 'Elle est la PREMIÈRE FEMME PHARAON officiellement reconnue dans l\'histoire ! Elle se faisait représenter mi-femme, mi-homme pour montrer qu\'elle était vraiment pharaon.',
+            monument: 'Pyramide du Fayoum', monumentEmoji: '🔺', img: '', monumentImg: '',
+          },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'nouvel', name: 'Nouvel Empire', color: '#ef4444', emoji: '⚔️',
+    years: '-1550 à -1069',
+    desc: 'L\'âge d\'or des pharaons les plus célèbres !',
+    dynasties: [
+      {
+        name: 'XVIIIe dynastie', years: '-1550 à -1295',
+        pharaohs: [
+          { name: 'Ahmôsis Ier', years: '-1550 à -1525', duration: '~25 ans', age: '~35 ans', emoji: '🦅', star: true,
+            anecdote: 'LE LIBÉRATEUR ! Des envahisseurs appelés Hyksôs avaient pris l\'Égypte. Ahmôsis les a chassés et a rendu l\'Égypte aux Égyptiens ! Il est considéré comme un grand héros.',
+            monument: 'Temple de Karnak', monumentEmoji: '🏛️',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Karnak_temple_Khonsu.jpg/320px-Karnak_temple_Khonsu.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Karnak_temple_Khonsu.jpg/320px-Karnak_temple_Khonsu.jpg',
+          },
+          { name: 'Hatchepsout', years: '-1479 à -1458', duration: '~21 ans', age: '~50 ans', emoji: '👸', star: true,
+            anecdote: 'LA FEMME PHARAON LA PLUS CÉLÈBRE ! Elle se déguisait avec une fausse barbe d\'or pour ressembler à un roi. Elle a envoyé des bateaux dans de lointains pays pour rapporter des arbres à encens parfumé. Son temple est magnifique !',
+            monument: 'Temple de Deir el-Bahari', monumentEmoji: '🏛️',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mortuary_Temple_of_Hatshepsut_edit2.jpg/320px-Mortuary_Temple_of_Hatshepsut_edit2.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mortuary_Temple_of_Hatshepsut_edit2.jpg/320px-Mortuary_Temple_of_Hatshepsut_edit2.jpg',
+          },
+          { name: 'Thoutmosis III', years: '-1479 à -1425', duration: '~54 ans', age: '~56 ans', emoji: '⚔️', star: true,
+            anecdote: 'LE PLUS GRAND GUERRIER D\'ÉGYPTE ! Il a remporté 17 batailles et agrandi l\'Égypte comme jamais. On l\'appelle le "Napoléon égyptien". C\'est lui qui a planté les premiers grands obélisques en Europe !',
+            monument: 'Obélisques de Karnak', monumentEmoji: '🗼', img: '', monumentImg: '',
+          },
+          { name: 'Amenhotep III', years: '-1390 à -1352', duration: '~38 ans', age: '~50 ans', emoji: '👑', star: true,
+            anecdote: 'LE PHARAON DU LUXE ! Il vivait dans le plus grand palace d\'Égypte. Il avait une centaine de femmes ! Ses deux énormes statues de pierre (les Colosses de Memnon) sont encore debout. L\'Égypte était alors le pays le plus riche du monde.',
+            monument: 'Colosses de Memnon', monumentEmoji: '🗿',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Colossi_of_Memnon_05.jpg/320px-Colossi_of_Memnon_05.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e9/Colossi_of_Memnon_05.jpg/320px-Colossi_of_Memnon_05.jpg',
+          },
+          { name: 'Akhénaton', years: '-1352 à -1336', duration: '~16 ans', age: '~35 ans', emoji: '☀️', star: true,
+            anecdote: 'LE PHARAON BIZARRE ! Il a décidé que l\'Égypte n\'aurait plus qu\'UN SEUL dieu : le soleil Aton. Il a construit une toute nouvelle ville dans le désert. Et les artistes sous son règne peignaient des visages allongés très étranges !',
+            monument: 'Cité d\'Amarna (disparue)', monumentEmoji: '🌅', img: '', monumentImg: '',
+          },
+          { name: 'Toutânkhamon', years: '-1336 à -1327', duration: '~9 ans', age: '~19 ans', emoji: '🎭', star: true,
+            anecdote: 'LE PLUS CÉLÈBRE DU MONDE ! Il est devenu pharaon à 9 ans et est mort à seulement 19 ans. Sa tombe pleine de trésors a été découverte en 1922. Son masque d\'or pèse 11 kg — autant que toi ! Il marchait avec une canne car il avait mal à la jambe.',
+            monument: 'Tombe KV62, Vallée des Rois', monumentEmoji: '⚱️',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/CairoEgMuseumTaaMaskMostlyPhotographed.jpg/240px-CairoEgMuseumTaaMaskMostlyPhotographed.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/CairoEgMuseumTaaMaskMostlyPhotographed.jpg/240px-CairoEgMuseumTaaMaskMostlyPhotographed.jpg',
+          },
+        ]
+      },
+      {
+        name: 'XIXe et XXe dynasties', years: '-1295 à -1069',
+        pharaohs: [
+          { name: 'Séthi Ier', years: '-1294 à -1279', duration: '~15 ans', age: '?', emoji: '⚔️', star: true,
+            anecdote: 'Sa tombe dans la Vallée des Rois est la PLUS LONGUE et la plus belle de toutes ! Les peintures sur ses murs sont comme une BD colorée sur l\'au-delà. Son temple d\'Abydos est aussi un chef-d\'œuvre.',
+            monument: 'Temple d\'Abydos', monumentEmoji: '🏛️',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Abydos_Tempel_Sethos_I_Kapitell_02.jpg/320px-Abydos_Tempel_Sethos_I_Kapitell_02.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8e/Abydos_Tempel_Sethos_I_Kapitell_02.jpg/320px-Abydos_Tempel_Sethos_I_Kapitell_02.jpg',
+          },
+          { name: 'Ramsès II', years: '-1279 à -1213', duration: '~66 ans', age: '~92 ans', emoji: '👑', star: true,
+            anecdote: 'LE PLUS GRAND PHARAON ! Il a régné 66 ans et avait plus de 100 enfants. Il a fait construire le temple géant d\'Abou Simbel taillé dans la roche, avec 4 statues de lui hautes comme 3 girafes superposées ! Il a aussi signé le premier traité de paix de l\'histoire.',
+            monument: 'Temple d\'Abou Simbel', monumentEmoji: '🏛️',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Abu_Simbel%2C_Ramesses_Temple%2C_front%2C_Egy%2C_Oct_2004.jpg/320px-Abu_Simbel%2C_Ramesses_Temple%2C_front%2C_Egy%2C_Oct_2004.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Abu_Simbel%2C_Ramesses_Temple%2C_front%2C_Egy%2C_Oct_2004.jpg/320px-Abu_Simbel%2C_Ramesses_Temple%2C_front%2C_Egy%2C_Oct_2004.jpg',
+          },
+          { name: 'Ramsès III', years: '-1184 à -1153', duration: '~31 ans', age: '~65 ans', emoji: '⚔️', star: true,
+            anecdote: 'Le dernier grand pharaon guerrier ! Il a repoussé des envahisseurs venus de la mer (les "Peuples de la Mer"). Mais il a été assassiné par l\'une de ses femmes qui voulait que son fils devienne pharaon. Les scientifiques l\'ont découvert en regardant sa momie !',
+            monument: 'Temple de Médinet Habou', monumentEmoji: '🏛️',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Medinet_Habu-temple_Ramesses_III-general.jpg/320px-Medinet_Habu-temple_Ramesses_III-general.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/ab/Medinet_Habu-temple_Ramesses_III-general.jpg/320px-Medinet_Habu-temple_Ramesses_III-general.jpg',
+          },
+        ]
+      }
+    ]
+  },
+  {
+    id: 'grec', name: 'Époque Grecque', color: '#06b6d4', emoji: '🏛️',
+    years: '-332 à -30',
+    desc: 'Les derniers pharaons viennent de Grèce !',
+    dynasties: [
+      {
+        name: 'Alexandre et les Ptolémées', years: '-332 à -30',
+        pharaohs: [
+          { name: 'Alexandre le Grand', years: '-332 à -323', duration: '~9 ans', age: '32 ans', emoji: '⚔️', star: true,
+            anecdote: 'LE PLUS GRAND CONQUÉRANT DU MONDE ! Ce général grec a libéré les Égyptiens des méchants Perses. Les Égyptiens l\'ont accueilli comme un héros ! Il a fondé la ville d\'Alexandrie, et un oracle l\'a proclamé "Fils du dieu Amon". Mort à 32 ans seulement.',
+            monument: 'Alexandrie', monumentEmoji: '🏛️', img: '', monumentImg: '',
+          },
+          { name: 'Ptolémée Ier', years: '-305 à -282', duration: '~23 ans', age: '~84 ans', emoji: '📚', star: true,
+            anecdote: 'Un général d\'Alexandre qui a fondé la légendaire BIBLIOTHÈQUE D\'ALEXANDRIE, la plus grande du monde antique ! Et aussi le Phare d\'Alexandrie, une des 7 Merveilles du Monde. Il a aussi volé le corps d\'Alexandre pour l\'enterrer en Égypte !',
+            monument: 'Bibliothèque d\'Alexandrie', monumentEmoji: '📚', img: '', monumentImg: '',
+          },
+          { name: 'Cléopâtre VII', years: '-51 à -30', duration: '~21 ans', age: '39 ans', emoji: '👸', star: true,
+            anecdote: 'LA PLUS CÉLÈBRE REINE DU MONDE ! Elle parlait 9 langues différentes. Elle a séduit Jules César et Marc Antoine pour sauver l\'Égypte. Vaincue par les Romains, elle s\'est laissé mordre par un serpent cobra plutôt que d\'être capturée. Sa mort marque la FIN de l\'Égypte des pharaons !',
+            monument: 'Alexandrie', monumentEmoji: '🐍',
+            img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kleopatra-VII.-Altes-Museum-Berlin1.jpg/240px-Kleopatra-VII.-Altes-Museum-Berlin1.jpg',
+            monumentImg: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kleopatra-VII.-Altes-Museum-Berlin1.jpg/240px-Kleopatra-VII.-Altes-Museum-Berlin1.jpg',
+          },
+        ]
+      }
+    ]
+  },
+];
+
+// ============================================================
+// QUIZ DATA
+// ============================================================
+
+const QUIZ_QUESTIONS = [
+  { type: 'qcm', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/CairoEgMuseumTaaMaskMostlyPhotographed.jpg/240px-CairoEgMuseumTaaMaskMostlyPhotographed.jpg',
+    question: 'Ce masque en or appartient à quel pharaon ?', correct: 'Toutânkhamon',
+    options: ['Ramsès II', 'Toutânkhamon', 'Khéops', 'Cléopâtre'],
+    feedback: 'Bravo ! Le masque de Toutânkhamon pèse 11 kg et est fait d\'or pur. Il a été découvert en 1922 !'
+  },
+  { type: 'monument', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kheops-Pyramid.jpg/320px-Kheops-Pyramid.jpg',
+    question: 'Quel pharaon a fait construire cette pyramide géante ?', correct: 'Khéops',
+    options: ['Djéser', 'Snéfrou', 'Khéops', 'Mykérinos'],
+    feedback: 'Oui ! La Grande Pyramide de Gizeh a été construite pour Khéops. Elle était la plus haute construction du monde pendant 3800 ans !'
+  },
+  { type: 'qcm', img: '',
+    question: 'Quel pharaon a régné le plus longtemps de toute l\'histoire ? (presque 100 ans !)', correct: 'Pépi II',
+    options: ['Ramsès II', 'Toutânkhamon', 'Pépi II', 'Cléopâtre'],
+    feedback: 'Pépi II est devenu pharaon à 6 ans et a régné environ 94 ans. Ramsès II, lui, a régné 66 ans !'
+  },
+  { type: 'monument', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Abu_Simbel%2C_Ramesses_Temple%2C_front%2C_Egy%2C_Oct_2004.jpg/320px-Abu_Simbel%2C_Ramesses_Temple%2C_front%2C_Egy%2C_Oct_2004.jpg',
+    question: 'Ce temple géant avec 4 statues colossales, c\'est le temple d\'...', correct: 'Abou Simbel (Ramsès II)',
+    options: ['Djéser', 'Hatchepsout', 'Abou Simbel (Ramsès II)', 'Toutânkhamon'],
+    feedback: 'Bravo ! Le temple d\'Abou Simbel a été construit par Ramsès II. Les 4 statues le représentent et sont hautes comme 3 girafes !'
+  },
+  { type: 'qcm', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/55/Mortuary_Temple_of_Hatshepsut_edit2.jpg/320px-Mortuary_Temple_of_Hatshepsut_edit2.jpg',
+    question: 'Ce beau temple à terrasses appartient à une femme pharaon. Laquelle ?', correct: 'Hatchepsout',
+    options: ['Néfertiti', 'Cléopâtre', 'Hatchepsout', 'Néferousobek'],
+    feedback: 'Oui ! Hatchepsout était une femme qui est devenue pharaon. Elle portait une fausse barbe dorée ! Son temple est magnifique.'
+  },
+  { type: 'qcm', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Sphinx_of_Giza%2C_Giza%2C_Cairo%2C_Egypt.jpg/320px-Sphinx_of_Giza%2C_Giza%2C_Cairo%2C_Egypt.jpg',
+    question: 'Le Grand Sphinx de Gizeh aurait le visage de quel pharaon ?', correct: 'Khéphren',
+    options: ['Khéops', 'Khéphren', 'Ramsès II', 'Amenhotep III'],
+    feedback: 'Le Sphinx aurait le visage de Khéphren, le fils de Khéops. Il est haut comme un immeuble de 6 étages et long comme un terrain de foot !'
+  },
+  { type: 'qcm', img: '',
+    question: 'Quel pharaon était le PREMIER à avoir été couronné roi ?', correct: 'Narmer',
+    options: ['Djéser', 'Snéfrou', 'Narmer', 'Pépi II'],
+    feedback: 'Narmer est considéré comme le tout premier pharaon d\'Égypte, vers -3150. Il a uni le nord et le sud du pays !'
+  },
+  { type: 'qcm', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Kleopatra-VII.-Altes-Museum-Berlin1.jpg/240px-Kleopatra-VII.-Altes-Museum-Berlin1.jpg',
+    question: 'Cette reine célèbre est la dernière pharaon de l\'Égypte antique. Qui est-elle ?', correct: 'Cléopâtre VII',
+    options: ['Hatchepsout', 'Néferousobek', 'Cléopâtre VII', 'Néfertiti'],
+    feedback: 'Cléopâtre VII est la dernière pharaon. Elle parlait 9 langues et sa mort en -30 marque la fin de 3000 ans d\'Égypte des pharaons !'
+  },
+  { type: 'monument', img: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Saqqara_BW_5.jpg/320px-Saqqara_BW_5.jpg',
+    question: 'Cette pyramide en forme d\'escalier est la première pyramide du monde ! Qui l\'a fait construire ?', correct: 'Djéser',
+    options: ['Narmer', 'Djéser', 'Khéops', 'Ramsès II'],
+    feedback: 'Djéser et son architecte génial Imhotep ont inventé la pyramide ! C\'est à Saqqarah et ça ressemble à un escalier pour monter vers les dieux.'
+  },
+  { type: 'qcm', img: '',
+    question: 'Quel pharaon a décidé qu\'il n\'y aurait plus qu\'un seul dieu : le soleil ?', correct: 'Akhénaton',
+    options: ['Amenhotep III', 'Akhénaton', 'Ramsès II', 'Toutânkhamon'],
+    feedback: 'Akhénaton a fait quelque chose de révolutionnaire : il a imposé un seul dieu (le soleil Aton) et construit une ville entière dans le désert !'
+  },
+];
+
+// ============================================================
+// CONSTRUCTION DE LA FRISE
+// ============================================================
+
+function buildFrise() {
+  // Navigation par période
+  const nav = document.getElementById('periodNav');
+  PERIODS.forEach(p => {
+    const btn = document.createElement('button');
+    btn.className = 'period-pill';
+    btn.style.background = p.color;
+    btn.textContent = p.emoji + ' ' + p.name;
+    btn.onclick = () => document.getElementById('period-' + p.id).scrollIntoView({ behavior: 'smooth' });
+    nav.appendChild(btn);
+  });
+
+  // Dynasties
+  const container = document.getElementById('dynastiesContainer');
+  PERIODS.forEach(p => {
+    const periodDiv = document.createElement('div');
+    periodDiv.id = 'period-' + p.id;
+
+    p.dynasties.forEach((dyn, dIdx) => {
+      const block = document.createElement('div');
+      block.className = 'dynasty-block';
+      block.style.setProperty('--dynasty-color', p.color);
+
+      block.innerHTML = `
+        <div class="dynasty-title">
+          <div class="dynasty-emoji">${p.emoji}</div>
+          <div class="dynasty-title-text">
+            <h3>${dIdx === 0 ? p.name + ' — ' : ''}${dyn.name}</h3>
+            <p>${dyn.years}</p>
+          </div>
+        </div>
+        ${dIdx === 0 ? `<div class="dynasty-desc" style="border-color:${p.color}">${p.desc}</div>` : ''}
+      `;
+
+      const list = document.createElement('div');
+      list.className = 'pharaohs-list';
+
+      dyn.pharaohs.forEach(ph => {
+        const card = document.createElement('button');
+        card.className = 'pharaoh-card' + (ph.star ? ' star' : '');
+        card.style.setProperty('--dynasty-color', p.color);
+        card.innerHTML = `
+          <div class="pharaoh-avatar">${ph.img ? `<img src="${ph.img}" alt="${ph.name}" onerror="this.parentNode.textContent='${ph.emoji}'">` : ph.emoji}</div>
+          <div class="pharaoh-info">
+            <h4>${ph.name}</h4>
+            <div class="reign">${ph.years} · ${ph.duration}</div>
+          </div>
+          ${ph.star ? '<div class="star-badge">⭐</div>' : ''}
+        `;
+        card.onclick = () => openDetail(ph, p, dyn);
+        list.appendChild(card);
+      });
+
+      block.appendChild(list);
+      periodDiv.appendChild(block);
+    });
+
+    container.appendChild(periodDiv);
+  });
+}
+
+function openDetail(ph, period, dyn) {
+  const screen = document.getElementById('detailScreen');
+  document.getElementById('detailName').textContent = ph.name;
+  document.getElementById('detailDynasty').textContent = dyn.name;
+  document.getElementById('detailBgEmoji').textContent = ph.emoji;
+
+  const bgImg = document.getElementById('detailBgImg');
+  if (ph.img) {
+    bgImg.src = ph.img;
+    bgImg.style.display = '';
+  } else {
+    bgImg.style.display = 'none';
+  }
+
+  document.getElementById('detailChips').innerHTML = `
+    <div class="chip">📅 ${ph.years}</div>
+    <div class="chip">⏱️ ${ph.duration}</div>
+    ${ph.age !== '?' ? `<div class="chip">🎂 ${ph.age}</div>` : ''}
+  `;
+  document.getElementById('detailAnecdote').textContent = ph.anecdote;
+
+  // Monument
+  const monSection = document.getElementById('monumentSection');
+  if (ph.monument) {
+    monSection.style.display = '';
+    const wrap = document.getElementById('monumentImgWrap');
+    if (ph.monumentImg) {
+      wrap.innerHTML = `<img src="${ph.monumentImg}" alt="${ph.monument}" onerror="this.parentNode.innerHTML='<div class=monument-emoji-fallback>${ph.monumentEmoji}</div>'">`;
+    } else {
+      wrap.innerHTML = `<div class="monument-emoji-fallback">${ph.monumentEmoji}</div>`;
+    }
+    document.getElementById('monumentCaption').textContent = ph.monument;
+  } else {
+    monSection.style.display = 'none';
+  }
+
+  screen.classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDetail() {
+  document.getElementById('detailScreen').classList.remove('active');
+  document.body.style.overflow = '';
+}
+
+// ============================================================
+// QUIZ
+// ============================================================
+
+let quizQuestions = [];
+let currentQ = 0;
+let score = 0;
+const TOTAL = 10;
+
+function shuffle(arr) {
+  return [...arr].sort(() => Math.random() - 0.5);
+}
+
+function startQuiz() {
+  quizQuestions = shuffle(QUIZ_QUESTIONS).slice(0, TOTAL);
+  currentQ = 0;
+  score = 0;
+  document.getElementById('quizIntro').style.display = 'none';
+  document.getElementById('quizResults').style.display = 'none';
+  document.getElementById('quizGame').style.display = 'block';
+  document.getElementById('scoreTotal').textContent = TOTAL;
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = quizQuestions[currentQ];
+  document.getElementById('scoreQ').textContent = currentQ + 1;
+  document.getElementById('scoreGood').textContent = score;
+  document.getElementById('progressBar').style.width = ((currentQ / TOTAL) * 100) + '%';
+  document.getElementById('quizFeedback').classList.remove('show');
+  document.getElementById('nextBtn').style.display = 'none';
+
+  // Badge type
+  document.getElementById('quizTypeBadge').textContent = q.type === 'monument' ? '🏛️ Monument' : '🤔 Qui suis-je ?';
+
+  // Image
+  const imgWrap = document.getElementById('questionImgWrap');
+  if (q.img) {
+    imgWrap.style.display = '';
+    imgWrap.innerHTML = `<img src="${q.img}" alt="" style="width:100%;border-radius:16px;" onerror="this.parentNode.innerHTML='<div class=quiz-question-emoji>🏺</div>'">`;
+  } else {
+    imgWrap.style.display = 'none';
+    imgWrap.innerHTML = '';
+  }
+
+  document.getElementById('questionText').textContent = q.question;
+
+  // Options
+  const opts = document.getElementById('quizOptions');
+  opts.innerHTML = '';
+  const shuffled = shuffle(q.options);
+  shuffled.forEach(opt => {
+    const btn = document.createElement('button');
+    btn.className = 'quiz-option';
+    btn.textContent = opt;
+    btn.onclick = () => answerQuestion(opt, q);
+    opts.appendChild(btn);
+  });
+}
+
+function answerQuestion(chosen, q) {
+  // Désactiver tous les boutons
+  document.querySelectorAll('.quiz-option').forEach(btn => {
+    btn.disabled = true;
+    if (btn.textContent === q.correct) btn.classList.add('correct');
+    else if (btn.textContent === chosen && chosen !== q.correct) btn.classList.add('wrong');
+  });
+
+  const isCorrect = chosen === q.correct;
+  if (isCorrect) score++;
+
+  // Feedback
+  const fb = document.getElementById('quizFeedback');
+  document.getElementById('feedbackEmoji').textContent = isCorrect ? '🎉' : '😅';
+  document.getElementById('feedbackTitle').textContent = isCorrect ? 'Bravo, c\'est exact !' : 'Pas tout à fait...';
+  document.getElementById('feedbackTitle').style.color = isCorrect ? '#166534' : '#991b1b';
+  document.getElementById('feedbackText').textContent = q.feedback;
+  fb.classList.add('show');
+
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('nextBtn').textContent = currentQ + 1 < TOTAL ? 'Question suivante ➡️' : 'Voir mon score ! 🏆';
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ >= TOTAL) {
+    showResults();
+  } else {
+    showQuestion();
+  }
+}
+
+function showResults() {
+  document.getElementById('quizGame').style.display = 'none';
+  const res = document.getElementById('quizResults');
+  res.style.display = 'block';
+
+  const pct = score / TOTAL;
+  let emoji, title, msg, stars;
+
+  if (pct === 1) {
+    emoji = '🏆'; title = 'Parfait !'; stars = '⭐⭐⭐';
+    msg = 'Tu connais les pharaons mieux qu\'un vrai égyptologue !';
+  } else if (pct >= 0.7) {
+    emoji = '🎉'; title = 'Excellent !'; stars = '⭐⭐';
+    msg = 'Tu es un(e) vrai(e) explorateur(trice) de l\'Égypte ancienne !';
+  } else if (pct >= 0.4) {
+    emoji = '😊'; title = 'Bien joué !'; stars = '⭐';
+    msg = 'Tu progresses ! Lis encore la frise et retente ta chance !';
+  } else {
+    emoji = '📚'; title = 'Continue !'; stars = '🌟';
+    msg = 'Explore encore la frise pour apprendre plein de choses !';
+  }
+
+  document.getElementById('resultsEmoji').textContent = emoji;
+  document.getElementById('resultsTitle').textContent = title;
+  document.getElementById('trophyStars').textContent = stars;
+  document.getElementById('resultsScore').textContent = score + ' / ' + TOTAL;
+  document.getElementById('resultsMsg').textContent = msg;
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+
+function showTab(tab) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('screen-' + tab).classList.add('active');
+  document.getElementById('tab-' + tab).classList.add('active');
+}
+
+// Init
+buildFrise();
+</script>
+</body>
+</html>
